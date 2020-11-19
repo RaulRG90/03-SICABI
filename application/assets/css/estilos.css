@@ -1,0 +1,74 @@
+.main-footer .list-info {
+    line-height: auto;
+    background-color: #12322B;
+    color: white;
+    background-size: cover;
+    background-position: bottom;
+    padding: 30px 10px 10px;
+    /* margin-bottom: 30px; */
+}
+*, :after, :before {
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+.footer-pleca {
+    background-color: #12322B;
+    background-image: url(https://framework-gb.cdn.gob.mx/landing/img/pleca.svg);
+    background-repeat: repeat-x;
+}
+.container, .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.container, .container-fluid {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+*, :after, :before {
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+.main-footer .list-info a {
+    color: #FFF;
+    font-size: 14px;
+    text-decoration: none;
+}
+.social-icon.facebook {
+    width: 14px;
+    height: 20px;
+    background-position: 0 0;
+}
+.social-icon {
+    background-image: url(https://framework-gb.cdn.gob.mx/assets/images/icons_full.png);
+    display: block;
+    text-indent: -9999px;
+    margin-right: 5px;
+}
+a {
+    text-decoration: underline;
+}
+a {
+    background-color: transparent;
+    color: #12C;
+}
+*, :after, :before {
+    box-sizing: border-box;
+}
+user agent stylesheet
+a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.social-icon.twitter {
+    width: 24px;
+    height: 20px;
+    background-position: -34px 0;
+}

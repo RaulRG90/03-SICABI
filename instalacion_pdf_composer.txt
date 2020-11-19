@@ -1,0 +1,4 @@
+para instalar la libreria de mpdf
+1) instalar composer https://getcomposer.org/
+2) posicionarse en la carpeta del proyecto SICABI
+3) ejecutar el comando de mpdf desde composer https://mpdf.github.io/

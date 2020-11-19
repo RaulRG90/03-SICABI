@@ -1,0 +1,332 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.7
+-- Dumped by pg_dump version 11.7
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = true;
+
+--
+-- Name: acceso; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.acceso (
+    id_acceso smallint NOT NULL,
+    url character varying(500) NOT NULL,
+    id_perfil smallint NOT NULL,
+    id_modulo smallint NOT NULL,
+    activo smallint DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.acceso OWNER TO postgres;
+
+--
+-- Name: cat_modulo; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cat_modulo (
+    id_modulo smallint NOT NULL,
+    modulo character varying(50)
+);
+
+
+ALTER TABLE public.cat_modulo OWNER TO postgres;
+
+--
+-- Name: cat_perfil; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cat_perfil (
+    id_perfil smallint NOT NULL,
+    perfil character varying(50)
+);
+
+
+ALTER TABLE public.cat_perfil OWNER TO postgres;
+
+--
+-- Name: historial; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.historial (
+    id_historial smallint NOT NULL,
+    usu_id smallint NOT NULL,
+    fecha date DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    latitude character varying,
+    longitude character varying,
+    tiempo time with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.historial OWNER TO postgres;
+
+--
+-- Name: id_acceso_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_acceso_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_acceso_seq OWNER TO postgres;
+
+--
+-- Name: id_acceso_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.id_acceso_seq OWNED BY public.acceso.id_acceso;
+
+
+--
+-- Name: id_historial_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.id_historial_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.id_historial_seq OWNER TO postgres;
+
+--
+-- Name: id_historial_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.id_historial_seq OWNED BY public.historial.id_historial;
+
+
+--
+-- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.usuarios (
+    usu_id integer NOT NULL,
+    id_perfil smallint DEFAULT 0 NOT NULL,
+    id_modulo smallint DEFAULT 0 NOT NULL,
+    usu_nombre character varying,
+    usu_login character varying NOT NULL,
+    usu_pass character varying NOT NULL
+);
+
+
+ALTER TABLE public.usuarios OWNER TO postgres;
+
+--
+-- Name: acceso id_acceso; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.acceso ALTER COLUMN id_acceso SET DEFAULT nextval('public.id_acceso_seq'::regclass);
+
+
+--
+-- Name: historial id_historial; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.historial ALTER COLUMN id_historial SET DEFAULT nextval('public.id_historial_seq'::regclass);
+
+
+--
+-- Data for Name: acceso; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.acceso (id_acceso, url, id_perfil, id_modulo, activo) FROM stdin;
+7	administrador/registro	1	3	1
+8	administrador/entrega	1	4	1
+9	administrador/preeseleccion	1	5	1
+11	administrador/entrega_p	1	6	1
+12	administrador/seleccion	1	7	1
+13	administrador/evaluacion_t	1	8	1
+3	administrador/convocatoria	1	1	1
+5	administrador/acreditacion	1	2	1
+\.
+
+
+--
+-- Data for Name: cat_modulo; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.cat_modulo (id_modulo, modulo) FROM stdin;
+2	Acreditación de Editoriales
+3	Registro de Títulos
+4	Entrega de Materiales
+5	Preeselección
+6	Entrega de materiales Preeselección
+7	Selección
+8	Evaluación Técnica
+1	Convocatoria
+\.
+
+
+--
+-- Data for Name: cat_perfil; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.cat_perfil (id_perfil, perfil) FROM stdin;
+1	Administrador
+2	Acreditador de Editoriales
+3	Editorial
+4	Recepcion de Materiales
+5	Representante de lectores
+7	Lector
+8	Recepcion de Materiales de Preeselección
+9	Selección
+10	Validación Técnica
+\.
+
+
+--
+-- Data for Name: historial; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.historial (id_historial, usu_id, fecha, latitude, longitude, tiempo) FROM stdin;
+6	1	2020-03-06	19.3624649	-99.16906	10:03:04.305648-06
+7	1	2020-03-06	19.3624649	-99.16906	10:03:17.647427-06
+8	1	2020-03-06	19.3624535	-99.1690345	10:48:23.022293-06
+9	1	2020-03-06	19.3624704	-99.1690129	10:54:20.795548-06
+10	1	2020-03-06	19.3624571	-99.1690094	11:59:13.845353-06
+11	1	2020-03-06	19.362487299999998	-99.16904380000001	12:16:43.346559-06
+12	1	2020-03-06	19.3624773	-99.1689974	13:26:28.225356-06
+13	1	2020-03-06	19.3624965	-99.16904439999999	13:57:57.637451-06
+14	1	2020-03-06	19.3624615	-99.1690241	17:03:03.212457-06
+15	1	2020-03-06	19.3624553	-99.16899760000001	17:47:56.93034-06
+16	1	2020-03-06	19.3624553	-99.16899760000001	17:59:25.756916-06
+17	1	2020-03-09	19.3625014	-99.16901229999999	09:48:31.621593-06
+\.
+
+
+--
+-- Data for Name: usuarios; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.usuarios (usu_id, id_perfil, id_modulo, usu_nombre, usu_login, usu_pass) FROM stdin;
+1	1	1	Raul Retana Gervacio	kyo	asian
+\.
+
+
+--
+-- Name: id_acceso_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_acceso_seq', 13, true);
+
+
+--
+-- Name: id_historial_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.id_historial_seq', 17, true);
+
+
+--
+-- Name: acceso key_id_acceso; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.acceso
+    ADD CONSTRAINT key_id_acceso PRIMARY KEY (id_acceso);
+
+
+--
+-- Name: historial key_id_historial; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.historial
+    ADD CONSTRAINT key_id_historial PRIMARY KEY (id_historial);
+
+
+--
+-- Name: cat_modulo key_id_modulo; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cat_modulo
+    ADD CONSTRAINT key_id_modulo PRIMARY KEY (id_modulo);
+
+
+--
+-- Name: cat_perfil key_id_perfil; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cat_perfil
+    ADD CONSTRAINT key_id_perfil PRIMARY KEY (id_perfil);
+
+
+--
+-- Name: usuarios key_usu_id; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT key_usu_id PRIMARY KEY (usu_id);
+
+
+--
+-- Name: idx_usu_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_usu_id ON public.usuarios USING btree (usu_id);
+
+
+--
+-- Name: acceso id_modulo_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.acceso
+    ADD CONSTRAINT id_modulo_fk FOREIGN KEY (id_modulo) REFERENCES public.cat_modulo(id_modulo);
+
+
+--
+-- Name: acceso id_perfil_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.acceso
+    ADD CONSTRAINT id_perfil_fk FOREIGN KEY (id_perfil) REFERENCES public.cat_perfil(id_perfil);
+
+
+--
+-- Name: historial usu_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.historial
+    ADD CONSTRAINT usu_id_fk FOREIGN KEY (usu_id) REFERENCES public.usuarios(usu_id);
+
+
+--
+-- Name: usuarios usu_permiso_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usu_permiso_fk FOREIGN KEY (id_modulo) REFERENCES public.cat_modulo(id_modulo);
+
+
+--
+-- Name: usuarios usuarios_usu_privilegio_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuarios
+    ADD CONSTRAINT usuarios_usu_privilegio_fkey FOREIGN KEY (id_perfil) REFERENCES public.cat_perfil(id_perfil);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
