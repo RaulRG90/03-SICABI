@@ -205,14 +205,14 @@ $(document).ready(function(){
         
         let fila=$(this).closest("tr");
         let p_id=fila.find('td:eq(0)').html();
-//        let val_select=fila.find('td:eq(2)').text()==='Acreditador'?2:3;
+        let val_select=fila.find('td:eq(2)').text()==='Acreditador'?2:3;
         let pass=$(fila.find('td:eq(3)').html());
         
         $('#btn_actualizar_usuario').attr('id_usuario',$(this).attr('id_usuario'));
         $('#frm_editar_usuario').trigger('reset');
         $('#edit_txt_nombre').val(fila.find('td:eq(0)').text());
         $('#edit_txt_usuario').val(fila.find('td:eq(1)').text());
-//        $('#edit_select_perfil').val(val_select);
+        $('#btn_actualizar_usuario').attr('id_perfil',val_select);
         $('#edit_txt_contrasenia').val($(pass).val());
         $('#edit_txt_confirmar').val($(pass).val());
         
@@ -232,7 +232,7 @@ $(document).ready(function(){
         else{
             let data={};
             let usu_id=$('#btn_actualizar_usuario').attr('id_usuario');
-            let perfil=$('#edit_select_perfil').val();
+            let perfil=$('#btn_actualizar_usuario').attr('id_perfil');
             let nombre=$('#edit_txt_nombre').val();
             let usuario=$('#edit_txt_usuario').val();
             let contrasenia=$('#edit_txt_contrasenia').val();

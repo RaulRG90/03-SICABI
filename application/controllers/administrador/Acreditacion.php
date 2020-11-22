@@ -130,11 +130,6 @@ class Acreditacion extends CI_Controller{
                         'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces']
                     ],
                     [
-                        'field'=>'id_perfil',
-                        'label'=>'Perfil de usuario',
-                        'rules'=>['required','trim','numeric']
-                    ],
-                    [
                         'field'=>'usu_pass',
                         'label'=>'Contraseña de usuario',
                         'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces']
@@ -251,7 +246,6 @@ class Acreditacion extends CI_Controller{
             $usu_id=set_value('usu_id');
             $usuario=$db->leer_usuario($usu_id);
             $datos_actualizacion=[
-                'id_perfil'=>$usuario['data'][0]['id_perfil']==set_value('id_perfil')?$usuario['data'][0]['id_perfil']:set_value('id_perfil'),
                 'id_modulo'=>$usuario['data'][0]['id_perfil']=='2'?2:3,
                 'usu_nombre'=>$usuario['data'][0]['usu_nombre']==set_value('usu_nombre')?$usuario['data'][0]['usu_nombre']:set_value('usu_nombre'),
                 'usu_login'=>$usuario['data'][0]['usu_login']==set_value('usu_login')?$usuario['data'][0]['usu_login']:set_value('usu_login'),

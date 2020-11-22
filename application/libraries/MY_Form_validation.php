@@ -15,6 +15,6 @@ class MY_Form_validation extends CI_Form_validation{
     * @return	bool
     */
    public function alpha_numeric_spaces($str){
-           return (bool) preg_match('/^[A-Z0-9 áéíóúÁÉÍÓÚÑñ,()]+$/i', $str);
+           return (bool) preg_match('/^[A-Z0-9 áéíóúÁÉÍÓÚÑñ,.()]+$/i', $str);
    }
 }

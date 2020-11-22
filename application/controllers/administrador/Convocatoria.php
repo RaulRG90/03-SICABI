@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   * Este módulo permite definir los atributos generales, las fechas de las etapas
   * de la convocatoria y realizar la selección de títulos para iniciar el proceso.
   */
-class Convocatoria extends RestController{
+class Convocatoria extends CI_Controller{
     
     private $datos_modulo;
     

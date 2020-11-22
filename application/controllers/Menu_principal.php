@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   * Muestra las opciones de menú a las que el usuario actual tiene acceso.
   */
 class Menu_principal extends CI_Controller {
+    
     //00 - Constructor
     public function __construct() {
         parent::__construct();
