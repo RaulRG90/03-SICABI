@@ -12,4 +12,5 @@
     </footer>
 </div>
 
+<script type="text/javascript">var base_url='<?=base_url();?>';</script>
 <script src="<?=base_url('assets/js/fechas_vencimiento.min.js')?>" type="text/javascript"></script>

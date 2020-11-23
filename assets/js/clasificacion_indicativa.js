@@ -1,5 +1,4 @@
 'use strict';
-var base_url=window.location.protocol+'//'+window.location.host;
 var componente_vista_previa=base_url+'/assets/js/clasificacion_indicativa/vista_previa.min.js';
 var componentes=base_url+'/assets/js/clasificacion_indicativa/componentes.min.js';
 var componente_cabecera;

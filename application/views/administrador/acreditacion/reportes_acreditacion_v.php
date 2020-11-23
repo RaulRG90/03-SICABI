@@ -14,11 +14,12 @@
 <!--Data Tables-->
 <script src="<?=base_url('assets/data_tables/Buttons-1.6.1/js/dataTables.buttons.min.js')?>" type="text/javascript"></script>
 <script type="text/javascript" src="<?=base_url('assets/data_tables/datatables.js')?>"></script>
+<script src="<?=base_url('assets/data_tables/plugins/range_dates.min.js')?>" type="text/javascript"></script>
 
 <!--ChartJs-->
 <script type="text/javascript" src="<?=base_url('assets/chartjs/Chart.bundle.min.js')?>"></script>
 
 <!--Módulo-->
+<script type="text/javascript">var base_url='<?=base_url();?>';</script>
 <script type="text/javascript" src="<?=base_url('assets/js/administrador/acreditacion/reportes_acreditacion.js')?>"></script>
-<script src="<?=base_url('assets/data_tables/plugins/range_dates.min.js')?>" type="text/javascript"></script>
 

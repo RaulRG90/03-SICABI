@@ -2,10 +2,9 @@
 
 <div id="contenedor_principal" class="container-fluid">
     <header id="cabecera_principal"></header>
-    <div id="div_agregar_usuario" class="d-flex flex-row-reverse bd-highlight"></div>
-    <section id="section_tabs"></section>
+    <div id="busqueda_editorial"></div>
+    <section id="seccion_tbl_editoriales"></section>
 </div>
-<div id="sand_box"></div>
 
 <!--DataTables-->
 <script src="<?=base_url('assets/data_tables/datatables.min.js')?>" type="text/javascript"></script>
@@ -13,4 +12,4 @@
 
 <!--Módulo-->
 <script type="text/javascript">var base_url='<?=base_url();?>';</script>
-<script type="text/javascript" src="<?=base_url('assets/js/administrador/acreditacion/gestion_usuarios.js')?>"></script>
+<script type="text/javascript" src="<?=base_url('assets/js/administrador/acreditacion/acreditacion_editoriales.min.js')?>"></script>

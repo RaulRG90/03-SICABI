@@ -1,4 +1,3 @@
-var base_url=window.location.protocol+'//'+window.location.host;
 var componente_frm_agregar_logo=base_url+'/assets/js/generales/frm_agregar_logo.min.js';
 var api_subir_logo=base_url+'/administrador/convocatoria/subir_logo';
 $(document).ready(function(){

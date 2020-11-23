@@ -73,6 +73,15 @@ class Acreditacion extends CI_Controller{
     // --------------------------------------------------------------
     
     /**
+    * Llamada a la vista Acreditación de Editoriales.
+    */
+    public function acreditacion_editoriales(){
+        
+        $this->load->view('administrador/acreditacion/acreditacion_editoriales_v');
+    }
+    // --------------------------------------------------------------
+    
+    /**
     * Llamada a la vista Gestión de Usuarios.
     */
     public function gestion_usuarios(){   
@@ -316,4 +325,17 @@ class Acreditacion extends CI_Controller{
         }
     }
     // --------------------------------------------------------------
+    
+    /**
+     * Leer editoriales
+     */
+    public function leer_editoriales(){
+        
+        $db=$this->Acreditacion_m;
+        
+        $editoriales=$db->leer_editoriales()['editoriales'];
+        
+        echo json_encode($editoriales,JSON_UNESCAPED_UNICODE);
+    }
+    
 }

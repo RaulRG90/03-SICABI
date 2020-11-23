@@ -1,5 +1,4 @@
 'use strict';
-var base_url=window.location.protocol+'//'+window.location.host;
 var api_leer_acreditadores=base_url+'/administrador/acreditacion/leer_usuarios/2';
 var api_leer_editoriales=base_url+'/administrador/acreditacion/leer_usuarios/3';
 var api_crear_usuario=base_url+'/administrador/acreditacion/agregar_usuario';

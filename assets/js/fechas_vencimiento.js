@@ -1,5 +1,4 @@
 'use strict';
-var base_url=window.location.protocol+'//'+window.location.host;
 var componentes=base_url+'/assets/js/fechas_vencimiento/componentes.min.js';
 var api_leer_modulos=base_url+'/administrador/convocatoria/leer_modulos';
 var api_guardar_fechas_modulos=base_url+'/administrador/convocatoria/guardar_fechas_modulos';

@@ -1,5 +1,4 @@
 'use strict';
-var base_url=window.location.protocol+'//'+window.location.host;
 var componente_cabecera=base_url+'/assets/js/herramientas/jumbotron.min.js';
 var componente_btn_descargar_excel=base_url+'/assets/js/herramientas/btn_success.min.js';
 var componente_totales=base_url+'/assets/js/herramientas/smallbox.min.js';

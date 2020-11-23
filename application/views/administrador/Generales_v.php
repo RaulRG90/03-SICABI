@@ -115,6 +115,7 @@
 </section>
 <section id="modales"></section>
 <!--Módulo-->
+<script type="text/javascript">var base_url='<?=base_url();?>';</script>
 <script src="<?= base_url('assets/js/generales.js')?>" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function(){

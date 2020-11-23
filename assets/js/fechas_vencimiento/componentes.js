@@ -1,4 +1,4 @@
-'use_strinct';
+'use_strict';
 var cabecera={
     render:function(){
         let titulo='Establecer Fechas de Vencimiento';

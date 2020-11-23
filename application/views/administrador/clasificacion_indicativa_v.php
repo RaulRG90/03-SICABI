@@ -48,4 +48,5 @@
 <script src="<?=base_url('assets/data_tables/datatables.min.js')?>" type="text/javascript"></script>
 <script src="<?=base_url('assets/data_tables/DataTables-1.10.20/js/dataTables.bootstrap4.js')?>" type="text/javascript"></script>
 <!--Módulo-->
+<script type="text/javascript">var base_url='<?=base_url();?>';</script>
 <script type="text/javascript" src="<?=base_url('assets/js/clasificacion_indicativa.min.js')?>"></script>
