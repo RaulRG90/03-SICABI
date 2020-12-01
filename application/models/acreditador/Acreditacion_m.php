@@ -7,12 +7,117 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Acreditacion_m extends CI_Model {
     
+    /**
+    * Constructor.
+    * 
+    * Carga los elementos necesarios para el correcto funcionamiento de la clase.
+    */
     public function __construct(){
         parent::__construct();
-        $this->load->database();
         $this->load->helper(['date','error']);
+        $this->db->db_debug = false;
     }
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Leer datos de acreditación.
+    * 
+    * Lee los datos correspondientes a la acreditación de editoriales.
+    */
+    public function leer_datos_acreditacion(){
         
+        $query=$this->db->get_where('cat_modulo',['id_modulo'=>2]);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response['error']=error_array($error);
+        }
+        else{
+
+            $response=$query->result_array()[0];
+        }
+        
+        return $response;
+    }
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Leer actividades de acreditación de editoriales.
+    * 
+    * Lee las actividades de la acreditación de editoriales.
+    */
+    public function leer_actividades_acreditacion($id_perfil,$id_modulo) {
+        
+        $this->db->select(
+                'lib_submodulos.id_submodulo,'.
+                'lib_submodulos.url_sub,'.
+                'lib_submodulos.id_acceso,'.
+                'lib_submodulos.nombre'
+            );
+        $this->db->from('lib_submodulos');
+        $this->db->join('acceso','acceso.id_acceso=lib_submodulos.id_acceso');
+        $this->db->where('acceso.id_perfil',$id_perfil);
+        $this->db->where('acceso.id_modulo',$id_modulo);
+        $this->db->order_by('lib_submodulos.id_submodulo','ASC');
+        $query=$this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
+    }
+    //--------------------------------------------------------------------------
+        
+    /**
+     * Leer editoriales.
+     *
+     * @return  boolean .
+     */
+    public function leer_editoriales(){
+        
+        $this->db->select(
+                'usu_id AS Folio de Editorial, '.
+                'edi_razonsocial AS Razón Social, '.
+                'edi_grupoedit AS Grupo Editorial, '.
+                'edi_dirgeneral AS Director General, '.
+                'edi_dirmail AS Correo Electrónico, '.
+                'edi_dircel AS Celular Director, '.
+                'edi_repnombre AS Nombre de representante, '.
+                'edi_repcargo AS Cargo de representante, '.
+                'edi_repemail AS Correo electrónico de representante, '.
+                'edi_observaciones AS Observaciones, '.
+                'fecha_creacion AS Fecha de acreditación, '.
+                'edi_rfc AS RFC, '.
+                'edi_colonia AS Colonia, '.
+                'edi_calle AS Calle, '.
+                'edi_numero AS Número, '.
+                'edi_cp AS Código Postal, '.
+                'edi_ciudad AS Ciudad, '.
+                'edi_pais AS País, '.
+                'edi_entidad_federativa AS Entidad Federativa, '.
+                'edi_delegacion AS Alcaldía, '.
+                'edi_telefonos AS Teléfono, '.
+                'edi_email AS Correo electrónico'
+        );
+        $query=$this->db->get('editoriales');
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
+        }
+        else{
+
+            $response['message']='Datos leidos!';
+            $response['editoriales']=$query->result_array();
+        }
+        
+        return $response;
+    }
+    // --------------------------------------------------------------
+    
     /**
      * Leer Sellos.
      */

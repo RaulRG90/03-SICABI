@@ -1,8 +1,12 @@
+<!--Data Tables-->
 <link rel="stylesheet" href="<?=base_url('assets/data_tables/datatables.min.css')?>">
+<link rel="stylesheet" type="text/css" href="<?=base_url('assets/data_tables/Buttons-1.6.1/css/buttons.dataTables.min.css')?>"/>
+
+<!--CSS de Módulo-->
+<link rel="stylesheet" type="text/css" href="<?=base_url('assets/css/administrador/acreditacion/acreditacion_editoriales.min.css')?>"/>
 
 <div id="contenedor_principal" class="container-fluid">
     <header id="cabecera_principal"></header>
-    <div id="busqueda_editorial"></div>
     <section id="seccion_tbl_editoriales"></section>
 </div>
 

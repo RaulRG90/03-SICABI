@@ -1,14 +1,15 @@
 <!--Data Tables-->
-<link href="<?=base_url('assets/data_tables/datatables.min.css" rel="stylesheet')?>" type="text/css"/>
-<link href="<?=base_url('assets/data_tables/Buttons-1.6.1/css/buttons.dataTables.min.css')?>" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="<?=base_url('assets/data_tables/datatables.min.css')?>"/>
+<link rel="stylesheet" type="text/css" href="<?=base_url('assets/data_tables/Buttons-1.6.1/css/buttons.dataTables.min.css')?>"/>
 
-<link href="<?=base_url('assets/css/reporte_acreditacion.css')?>" rel="stylesheet" type="text/css"/>
+<!--CSS de Módulo-->
+<link rel="stylesheet" type="text/css" href="<?=base_url('assets/css/administrador/acreditacion/reportes_acreditacion.min.css')?>"/>
 
 <div id="contenedor_principal" class="container-fluid">
     <header id="cabecera_principal"></header>
-    <div id="div_descargar_excel" class="d-flex flex-row-reverse bd-highlight"></div>
+    <div id="descargar_excel" class="d-flex flex-row-reverse bd-highlight"></div>
     <section id="seccion_principal"></section>
-    <section id="sand_box"></section>
+    <footer id="modales"></footer>
 </div>
 
 <!--Data Tables-->

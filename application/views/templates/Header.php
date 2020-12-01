@@ -29,6 +29,7 @@
       }
     </style>
 </head>
+
 <body class="fixed-sn black-skin">
 
   <!-- Navbar -->
@@ -42,11 +43,6 @@
       <p>Menú</p> 
     </div>
     <ul class="nav navbar-nav nav-flex-icons ml-auto">
-      <!--<li class="nav-item">
-      <a class="nav-link" href="<?php echo base_url();?>">
-          <i class="fa fa-home"></i><span class="clearfix d-none d-sm-inline-block">HOME</span>
-        </a>
-      </li>-->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
@@ -69,7 +65,7 @@
       <li>
         <ul class="collapsible">
           <li>
-            <a class='waves-effect arrow-r' href='<?php echo base_url();?>'><i class='fas fa-home'></i>Menu Principal</a>
+            <a class='waves-effect arrow-r' href='<?php echo base_url();?>'><i class='fas fa-home'></i>Menú Principal</a>
           </li>
         </ul>
       </li>

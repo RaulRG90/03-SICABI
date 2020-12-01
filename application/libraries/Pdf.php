@@ -24,7 +24,7 @@ class Pdf {
                 <td width="30%">
                     <img src="'.base_url(LOGOTIPO).'" height="50" />
                 </td>
-                <td width="70%" style="font-size:14;text-align: right;font-family: Verdana, Arial, Tahoma, Serif;">'.PROCESO.',<br>Bibliotecas '.BIBLIOTECA.',</brZ><br> Ciclo Escolar '.CICLO.'
+                <td width="70%" style="font-size:14;text-align: right;font-family: Verdana, Arial, Tahoma, Serif;">'.PROCESO.',<br>Bibliotecas '.BIBLIOTECA.',</br><br> Ciclo Escolar '.CICLO.'
                 </td>
             </tr>
         </table><hr>');
@@ -61,7 +61,7 @@ class Pdf {
                 <td width="30%">
                     <img src="'.base_url(LOGOTIPO).'" height="50" />
                 </td>
-                <td width="70%" style="font-size:14;text-align: right;font-family: Verdana, Arial, Tahoma, Serif;">'.PROCESO.'<br>Bibliotecas '.BIBLIOTECA.'</brZ><br> Ciclo Escolar '.CICLO.'
+                <td width="70%" style="font-size:14;text-align: right;font-family: Verdana, Arial, Tahoma, Serif;">'.PROCESO.'<br>Bibliotecas '.BIBLIOTECA.'</br><br> Ciclo Escolar '.CICLO.'
                 </td>
             </tr>
         </table><hr>');

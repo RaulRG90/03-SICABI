@@ -1,10 +1,10 @@
 'use_strict';
+
 var componentes=base_url+'assets/js/administrador/acreditacion/acreditacion_editoriales/componentes.min.js';
 
 var api_leer_editoriales=base_url+'administrador/acreditacion/leer_editoriales';
 
 var componente_cabecera;
-var componente_busqueda_editorial;
 var componente_tabla_editoriales;
 
 $(document).ready(function(){
@@ -23,7 +23,6 @@ $(document).ready(function(){
         iniciar_contenedores();
         cargar_componentes();
         crear_encabezado();
-        //crear_busqueda_editorial();
         crear_tabla_editoriales();
     }
     //--------------------------------------------------------------------------
@@ -35,7 +34,7 @@ $(document).ready(function(){
         
         $('#cabecera_principal').children().remove();
         $('#busqueda_editorial').children().remove();
-        $('#seccion_tbl_editoriales').children().remove();
+        $('#tabla_editoriales').children().remove();
     }
     //--------------------------------------------------------------------------
     
@@ -51,7 +50,6 @@ $(document).ready(function(){
             success:function(){
                 
                 componente_cabecera=cabecera;
-                componente_busqueda_editorial=busqueda_editorial;
                 componente_tabla_editoriales=tabla_editoriales;
             }
         });

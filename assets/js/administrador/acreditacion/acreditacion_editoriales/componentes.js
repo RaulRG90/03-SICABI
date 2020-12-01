@@ -1,4 +1,8 @@
 'use_strict';
+
+/* ******************* *
+* ***** Cabecera ***** *
+* ******************** */
 var cabecera={
     render:function(){
         let titulo='Acreditación de Titulares o Representantes Editoriales';
@@ -11,23 +15,11 @@ var cabecera={
         return jumbotron;
     }
 };
-var busqueda_editorial={
-    render:function(){
-        
-        let input_group=$('<div>',{'class':'input-group mb-3'});
-        let text=$('<input>',{'id':'text_search','class':'form-control','type':'text','aria-describedby':'btn_search'});
-        let group_btn=$('<div>',{'class':'input-group-append'});
-        let btn_search=$('<button>',{'id':'btn_search','type':'button','class':'btn btn-md btn-outline-success m-0 px-3 py-2 z-depth-0 waves-effect'});
-        
-        $(text).attr('placeholder','Razón social o folio');
-        $(btn_search).append($('<i>',{'class':'fa fa-search'}));
-        $(group_btn).append(btn_search);
-        
-        $(input_group).append(text).append(group_btn);
-        
-        return input_group;
-    }
-};
+//--------------------------------------------------------------------------
+
+/* ******************************* *
+* ***** Tabla de editoriales ***** *
+* ******************************** */
 var tabla_editoriales={
     render:function(){
         
@@ -63,3 +55,4 @@ var tabla_editoriales={
             });
     }
 };
+//--------------------------------------------------------------------------

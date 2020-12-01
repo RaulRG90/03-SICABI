@@ -137,14 +137,22 @@ class Control_acceso{
     * @param string $permiso_modulo Representa el permiso que se debe tener para acceder al módulo.
     * @return bool Retorna verdadero si tiene acceso de lo contrario retorna falso.
     */
-    public function validar_acceso_modulo($permiso_modulo,$fecha_inicio_acceso,$fecha_fin_acceso){
+    public function validar_acceso_modulo($permiso_modulo,$fecha_inicio_acceso=null,$fecha_fin_acceso=null){
         
         $acceso=false;
         $hoy=now('America/Mexico_City');
-        $fecha_inicio_acceso=strtotime($fecha_inicio_acceso);
-        $fecha_fin_acceso=strtotime($fecha_fin_acceso);
         
-        if($this->CI->session->userdata('permiso')==$permiso_modulo && $hoy>=$fecha_inicio_acceso && $hoy<=$fecha_fin_acceso){
+        if(!is_null($fecha_inicio_acceso) && !is_null($fecha_fin_acceso)){
+            
+            $fecha_inicio_acceso=strtotime($fecha_inicio_acceso);
+            $fecha_fin_acceso=strtotime($fecha_fin_acceso);
+        }
+        
+        if($permiso_modulo=='administrador' && $this->CI->session->userdata('permiso')==$permiso_modulo){
+            
+            $acceso=true;
+        }
+        else if($this->CI->session->userdata('permiso')==$permiso_modulo && $hoy>=$fecha_inicio_acceso && $hoy<=$fecha_fin_acceso){
             
             $acceso=true;
         }

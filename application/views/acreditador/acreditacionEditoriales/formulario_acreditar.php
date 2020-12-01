@@ -119,7 +119,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button id="btnEnviar" form="frmAcreditarEditorial" type="submit" class="btn btn-success">Enviar</button>
-                <button id="btnCancelar" form="frmAcreditarEditorial" type="reset" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="btnCancelar" type="button" class="btn btn-danger">Cancelar</button>
             </div>
 
         </div>

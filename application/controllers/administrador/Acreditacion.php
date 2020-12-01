@@ -4,31 +4,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
   * Acreditación.
   * 
-  * Este módulo permite definir los atributos generales, las fechas de las etapas
-  * de la convocatoria y realizar la selección de títulos para iniciar el proceso.
+  * Este módulo permite gestionar los perfiles de acceso acreditador y editorial
+  * así como monitorear el el numero de editoriales y sellos editoriales.
   */
 
 class Acreditacion extends CI_Controller{
     
     /**
+     *
+     * @var array Mantiene los datos del módulo.
+     */
+    private $datos_modulo;
+    
+    /**
+     *
+     * @var string Mantiene el permiso necesario para el módulo.
+     */
+    private $permiso='administrador';
+    
+    /**
     * Constructor.
+    * 
+    * Comprueba que el usuario ha iniciado sesión, que tiene acceso al módulo e
+    * inicia los atributos de la clase.
     */
     public function __construct(){
         
         parent::__construct();
         
-        $permiso='administrador';
         $control_acceso=$this->control_acceso;
         
-        
         //Comprobar acceso al módulo.
-        if($control_acceso->comprobar_inicio_sesion()){
-            
+        if($control_acceso->comprobar_inicio_sesion() && $control_acceso->validar_acceso_modulo($this->permiso)){
             
             //carga el modelo
-            $this->load->model('Principal_m');
             $this->load->model('administrador/Acreditacion_m');
+            
             $this->load->helper(['url','form','file']);
+            $this->load->library('pdf');
             $this->load->library('form_validation');
             $this->load->library('Spreadsheet');
         }
@@ -39,14 +52,21 @@ class Acreditacion extends CI_Controller{
     }
     // --------------------------------------------------------------
     
+    /**
+    * Index.
+    * 
+    * Punto de acceso que muestra el GUI de manipulación de la funcionalidad
+    * del módulo.
+    */
     public function index(){
         
         $perfil=$this->session->userdata('id_perfil');
-        $modulo='2';
+        $modulo=2;
         
-        $url=$this->Acreditacion_m->leer_actividades_acreditacion($perfil,$modulo);
+        $actividades=$this->Acreditacion_m->leer_actividades_acreditacion($perfil,$modulo);
+        
         //para guardar en archivo json
-        $data['urls']=$this->con_json($url);
+        $data['actividades']=$this->con_json($actividades);
 
         $this->load->view('templates/Header');
         $this->load->view('templates/main');      
@@ -55,40 +75,15 @@ class Acreditacion extends CI_Controller{
     //--------------------------------------------------------------------------
     
     /**
-    * Convierte la cadena en un json.
+    * Con JSON.
+    * 
+    * Transforma a formato JSON las URLs de las actividades del módulo.
     */
     public function con_json($url){
         $jsonencoded = json_encode($url,JSON_UNESCAPED_UNICODE);
         return str_replace("\\/", "/", $jsonencoded);
     }
     //--------------------------------------------------------------------------
-    
-    /**
-    * Llamada a la vista Reportes de Acreditación.
-    */
-    public function reportes_acreditacion(){
-        
-        $this->load->view('administrador/acreditacion/reportes_acreditacion_v');
-    }
-    // --------------------------------------------------------------
-    
-    /**
-    * Llamada a la vista Acreditación de Editoriales.
-    */
-    public function acreditacion_editoriales(){
-        
-        $this->load->view('administrador/acreditacion/acreditacion_editoriales_v');
-    }
-    // --------------------------------------------------------------
-    
-    /**
-    * Llamada a la vista Gestión de Usuarios.
-    */
-    public function gestion_usuarios(){   
-        
-        $this->load->view('administrador/acreditacion/gestion_usuarios_v');
-    }
-    // --------------------------------------------------------------
     
     /**
     * Define las reglas de validación.
@@ -152,7 +147,34 @@ class Acreditacion extends CI_Controller{
     // --------------------------------------------------------------
     
     /**
-     * Agregar usuario (editorial o acreditador).
+    * Gestión de usuarios.
+    * 
+    * Muestra el GUI para la manipulación de los usuarios de módulo de acreditación.
+    */
+    public function gestion_usuarios(){   
+        
+        $this->load->view('administrador/acreditacion/gestion_usuarios_v');
+    }
+    // --------------------------------------------------------------
+    
+    /**
+     * Leer usuarios editorial/acreditador.
+     * 
+     * Lee un usuario editorial o acreditador.
+     */
+    public function leer_usuarios($perfil){
+        
+        $db=$this->Acreditacion_m;
+        
+        $usuarios=$db->leer_usuarios($perfil);
+        echo json_encode($usuarios['data']);
+    }
+    // --------------------------------------------------------------
+    
+    /**
+     * Agregar usuario.
+     * 
+     * Agrega un usuario acreditador.
      */
     public function agregar_usuario(){
         
@@ -190,19 +212,48 @@ class Acreditacion extends CI_Controller{
     // --------------------------------------------------------------
     
     /**
-     * Leer usuarios editorial/acreditador.
+     * Actualizar usuario.
+     * 
+     * Actualiza un usuario acreditador.
      */
-    public function leer_usuarios($perfil){
+    public function actualizar_usuario(){
         
         $db=$this->Acreditacion_m;
         
-        $usuarios=$db->leer_usuarios($perfil);
-        echo json_encode($usuarios['data']);
+        //Validar Datos y sanitizar.
+        $rules=$this->reglas_validacion('actualizar_usuario');
+        $this->form_validation->set_rules($rules);
+        if($this->form_validation->run()==TRUE){
+            
+            $usu_id=set_value('usu_id');
+            $usuario=$db->leer_usuario($usu_id);
+            $datos_actualizacion=[
+                'id_modulo'=>$usuario['data'][0]['id_perfil']=='2'?2:3,
+                'usu_nombre'=>$usuario['data'][0]['usu_nombre']==set_value('usu_nombre')?$usuario['data'][0]['usu_nombre']:set_value('usu_nombre'),
+                'usu_login'=>$usuario['data'][0]['usu_login']==set_value('usu_login')?$usuario['data'][0]['usu_login']:set_value('usu_login'),
+                'usu_pass'=>$usuario['data'][0]['usu_pass']==set_value('usu_pass')?$usuario['data'][0]['usu_pass']:set_value('usu_pass')
+            ];
+            
+            $respuesta=$db->actualizar_usuario($datos_actualizacion,$usu_id);
+        }
+        else{
+            
+            $respuesta=[
+                'error'=>[
+                    'code'=>'v002',
+                    'message'=>validation_errors()
+                ]
+            ];
+        }
+        
+        echo json_encode($respuesta);
     }
     // --------------------------------------------------------------
     
     /**
-     * Eliminar usuario editorial/acreditador.
+     * Eliminar usuario.
+     * 
+     * Elimina un usuario acreditador.
      */
     public function eliminar_usuario(){
         
@@ -241,44 +292,20 @@ class Acreditacion extends CI_Controller{
     // --------------------------------------------------------------
     
     /**
-     * Actualizar usuario editorial/acreditador.
-     */
-    public function actualizar_usuario(){
+    * Reportes de acreditación.
+    * 
+    * Muestra el GUI para visualizar el monitoreo del módulo de acreditación.
+    */
+    public function reportes_acreditacion(){
         
-        $db=$this->Acreditacion_m;
-        
-        //Validar Datos y sanitizar.
-        $rules=$this->reglas_validacion('actualizar_usuario');
-        $this->form_validation->set_rules($rules);
-        if($this->form_validation->run()==TRUE){
-            
-            $usu_id=set_value('usu_id');
-            $usuario=$db->leer_usuario($usu_id);
-            $datos_actualizacion=[
-                'id_modulo'=>$usuario['data'][0]['id_perfil']=='2'?2:3,
-                'usu_nombre'=>$usuario['data'][0]['usu_nombre']==set_value('usu_nombre')?$usuario['data'][0]['usu_nombre']:set_value('usu_nombre'),
-                'usu_login'=>$usuario['data'][0]['usu_login']==set_value('usu_login')?$usuario['data'][0]['usu_login']:set_value('usu_login'),
-                'usu_pass'=>$usuario['data'][0]['usu_pass']==set_value('usu_pass')?$usuario['data'][0]['usu_pass']:set_value('usu_pass')
-            ];
-            
-            $respuesta=$db->actualizar_usuario($datos_actualizacion,$usu_id);
-        }
-        else{
-            
-            $respuesta=[
-                'error'=>[
-                    'code'=>'v002',
-                    'message'=>validation_errors()
-                ]
-            ];
-        }
-        
-        echo json_encode($respuesta);
+        $this->load->view('administrador/acreditacion/reportes_acreditacion_v');
     }
     // --------------------------------------------------------------
     
     /**
      * Leer Totales.
+     * 
+     * Lee los totales de editoriales y sellos acreditados.
      */
     public function leer_totales(){
         
@@ -292,6 +319,8 @@ class Acreditacion extends CI_Controller{
     
     /**
      * Leer Totales por día.
+     * 
+     * Lee los totales por día de la acreditación de editoriales y sellos.
      */
     public function leer_totales_dia(){
         
@@ -304,7 +333,9 @@ class Acreditacion extends CI_Controller{
     // --------------------------------------------------------------
     
     /**
-     * Crear reporte
+     * Crear reporte.
+     * 
+     * Crea los reportes del monitoreo del módulo de acreditación.
      */
     public function crear_reporte($tipo){
         
@@ -327,7 +358,20 @@ class Acreditacion extends CI_Controller{
     // --------------------------------------------------------------
     
     /**
-     * Leer editoriales
+    * Acreditación de Editoriales.
+    * 
+    * Muestra el GUI para visualizar las editoriales acreditadas.
+    */
+    public function acreditacion_editoriales(){
+        
+        $this->load->view('administrador/acreditacion/acreditacion_editoriales_v');
+    }
+    // --------------------------------------------------------------
+
+    /**
+     * Leer editoriales.
+     * 
+     * Lee las editoriales acreditadas.
      */
     public function leer_editoriales(){
         

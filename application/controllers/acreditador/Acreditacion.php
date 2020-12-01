@@ -1,23 +1,115 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Acreditacion extends CI_Controller {
-	//00 - Constructor
+/**
+  * Acreditación.
+  * 
+  * Este módulo permite acreditar las editoriales que participarán en el proceso.
+  */
+class Acreditacion extends CI_Controller{
+    
+    /**
+     *
+     * @var array Mantiene los datos del módulo.
+     */
+    private $datos_modulo;
+    
+    /**
+     *
+     * @var string Mantiene el permiso necesario para el módulo.
+     */
+    private $permiso='acreditador';
+    
+    /**
+    * Constructor.
+    * 
+    * Comprueba que el usuario ha iniciado sesión, que tiene acceso al módulo e
+    * inicia los atributos de la clase.
+    */
     public function __construct() {
+        
         parent::__construct();
-        //01 - Redireccionar en caso de no coincidir el valor del privilegio.
-        if($this->session->userdata('privilegio') != 2){
-            $this->controlacceso->reDireccionar($this->session->userdata('privilegio'));
-        }else{
+        
+        $this->load->model('acreditador/Acreditacion_m');
+        $this->datos_modulo=$this->Acreditacion_m->leer_datos_acreditacion();
+        $fecha_inicio_acceso=$this->datos_modulo['fecha_inicio_acceso'];
+        $fecha_fin_acceso=$this->datos_modulo['fecha_fin_acceso'];
+        
+        $control_acceso=$this->control_acceso;
+        
+        //Comprobar acceso al módulo.
+        if($control_acceso->comprobar_inicio_sesion() && $control_acceso->validar_acceso_modulo($this->permiso,$fecha_inicio_acceso,$fecha_fin_acceso)){
+            
+            
             //carga el modelo
-            $this->load->model('acreditador/Acreditacion_m');
+            $this->load->helper(['url','form','file']);
+            $this->load->library('pdf');
+            $this->load->library('form_validation');
+            $this->load->library('Spreadsheet');
         }
-
+        else{
+            
+            $control_acceso->redireccionar($this->session->userdata('permiso'));
+        }
     }
-	
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Index.
+    * 
+    * Punto de acceso que muestra el GUI de manipulación de la funcionalidad
+    * del módulo.
+    */
     public function index(){
+        
+        $perfil=$this->session->userdata('id_perfil');
+        $modulo=$this->session->userdata('modulo');
+        
+        $actividades=$this->Acreditacion_m->leer_actividades_acreditacion($perfil,$modulo);
+        //para guardar en archivo json
+        $data['actividades']=$this->con_json($actividades);
+
+        $this->load->view('templates/Header');
+        $this->load->view('templates/main');      
+        $this->load->view('templates/Footer',$data); 
+    }
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Con JSON.
+    * 
+    * Transforma a formato JSON las URLs de las actividades del módulo.
+    */
+    public function con_json($url){
+        $jsonencoded = json_encode($url,JSON_UNESCAPED_UNICODE);
+        return str_replace("\\/", "/", $jsonencoded);
+    }
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Acreditación de Editoriales.
+    * 
+    * Muestra el GUI para visualizar las editoriales acreditadas.
+    */
+    public function acreditacion_editoriales(){
         $this->load->view('acreditador/acreditacion_editoriales_v');
     }
+    //--------------------------------------------------------------------------
+    
+    /**
+     * Leer editoriales.
+     * 
+     * Lee las editoriales acreditadas.
+     */
+    public function leer_editoriales(){
+        
+        $db=$this->Acreditacion_m;
+        
+        $editoriales=$db->leer_editoriales()['editoriales'];
+        
+        echo json_encode($editoriales,JSON_UNESCAPED_UNICODE);
+    }
+    //--------------------------------------------------------------------------
     
     public function acreditarEditorial(){
         
