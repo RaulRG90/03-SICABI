@@ -14,7 +14,7 @@
     <link href="<?=base_url('assets/bootstrap-sweetalert-master/dist/sweetalert.css')?>" rel="stylesheet" type="text/css"/>
     <style>
         .bg-image {
-            background-image: url('/assets/imgs/background.jpg');
+            background-image: url('<?=base_url("assets/imgs/background.jpg")?>');
             background-size: cover;
             background-position: center;
         }
