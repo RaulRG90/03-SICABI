@@ -12,6 +12,13 @@
     <link href="<?=base_url('assets/css/mdb.min.css')?>" rel="stylesheet">
     <!--Sweet Alert-->
     <link href="<?=base_url('assets/bootstrap-sweetalert-master/dist/sweetalert.css')?>" rel="stylesheet" type="text/css"/>
+    <style>
+        .bg-image {
+            background-image: url('/assets/imgs/background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
     <!-- Módulo -->
     <link href="<?=base_url('assets/css/login.min.css')?>" rel="stylesheet">
     
