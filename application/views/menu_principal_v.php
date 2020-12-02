@@ -5,13 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>SICABI</title>
         <!--  Font Awesome  -->
-        <link href="/assets/css/fontawesome.css" rel="stylesheet" >
+        <link href="<?=base_url('assets/css/fontawesome.css');?>" rel="stylesheet" >
         <!-- Bootstrap core CSS -->
-        <link href="/assets/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+        <link href="<?=base_url('assets/css/bootstrap/bootstrap.min.css')?>" rel="stylesheet">
         <!-- Material Design Bootstrap -->
-        <link href="/assets/css/mdb.min.css" rel="stylesheet">
+        <link href="<?=base_url('assets/css/mdb.min.css')?>" rel="stylesheet">
         <!-- Custom styles -->
-        <link href="/assets/css/estilos.css" rel="stylesheet">
+        <link href="<?=base_url('assets/css/estilos.css')?>" rel="stylesheet">
     </head>
     <body class="fixed-sn black-skin">
 
@@ -62,18 +62,19 @@
 </main>
 <!--Main Layout-->
 <!-- JQuery -->
-    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?=base_url('assets/js/jquery.min.js');?>"></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="/assets/js/popper.min.js"></script>
+    <script type="text/javascript" src="<?=base_url('assets/js/popper.min.js');?>"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="/assets/js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?=base_url('assets/js/bootstrap/bootstrap.min.js');?>"></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="/assets/js/mdb.min.js"></script>
+    <script type="text/javascript" src="<?=base_url('assets/js/mdb.min.js');?>"></script>
     <!-- MENU -->
     <script type="text/javascript">
       $(document).ready(function() {
         //llenado de contenido
         
+        var base_url='<?=base_url();?>';
         var res = [];
         
         res = JSON.parse('<?=$urls?>');
@@ -86,7 +87,7 @@
           datos += "<!--Grid column-->";
           datos += "<div class='col-md-3 mb-4'>";
           datos += "<!-- Card -->";
-          datos += "<a href='<?=base_url();?>"+array[indice]['perfil']+'/'+array[indice]['modulo']+"' class='card hoverable'>";
+          datos += "<a href='"+base_url+array[indice]['perfil']+'/'+array[indice]['modulo']+"' class='card hoverable'>";
           datos += "<!-- Card content -->";
           datos += "<div class='card-body my-4'>";
           datos += "<p><i class='fas fa-pencil-ruler fa-2x text-muted'></i></p>";
