@@ -1,5 +1,4 @@
 'use strict';
-var base_url=window.location.protocol+'//'+window.location.host;
 var componentes=base_url+'/assets/js/login/componentes.min.js';
 var componente_login;
 

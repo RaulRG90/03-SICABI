@@ -86,7 +86,7 @@
           datos += "<!--Grid column-->";
           datos += "<div class='col-md-3 mb-4'>";
           datos += "<!-- Card -->";
-          datos += "<a href='/"+array[indice]['perfil']+'/'+array[indice]['modulo']+"' class='card hoverable'>";
+          datos += "<a href='<?=base_url();?>"+array[indice]['perfil']+'/'+array[indice]['modulo']+"' class='card hoverable'>";
           datos += "<!-- Card content -->";
           datos += "<div class='card-body my-4'>";
           datos += "<p><i class='fas fa-pencil-ruler fa-2x text-muted'></i></p>";
