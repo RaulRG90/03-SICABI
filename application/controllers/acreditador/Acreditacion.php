@@ -111,6 +111,21 @@ class Acreditacion extends CI_Controller{
     }
     //--------------------------------------------------------------------------
     
+    /**
+     * Leer editoriales.
+     * 
+     * Lee las editoriales acreditadas.
+     */
+    public function leer_editorial($id){
+        
+        $db=$this->Acreditacion_m;
+        
+        $editorial=$db->leer_editorial($id);
+        
+        echo json_encode($editorial,JSON_UNESCAPED_UNICODE);
+    }
+    //--------------------------------------------------------------------------
+    
     public function acreditarEditorial(){
         
         $db=$this->Acreditacion_m;
@@ -167,11 +182,11 @@ class Acreditacion extends CI_Controller{
         
         $datos=$this->input->post();
         
-        $editoriales=$db->leerEditorial($datos)->result_array();
+        $editoriales=$db->leer_editorial($datos)->result_array();
         
         if(!empty($editoriales)){
             
-            $sellos=$db->leerSellos()->result_array();
+            $sellos=$db->leer_sellos()->result_array();
             
             foreach($editoriales as $key=>$editorial){
                 

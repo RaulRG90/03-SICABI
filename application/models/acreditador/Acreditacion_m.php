@@ -78,7 +78,8 @@ class Acreditacion_m extends CI_Model {
     public function leer_editoriales(){
         
         $this->db->select(
-                'usu_id AS Folio de Editorial, '.
+                'id AS Folio de Editorial, '.
+                'usu_id AS Usuario, '.
                 'edi_razonsocial AS Razón Social, '.
                 'edi_grupoedit AS Grupo Editorial, '.
                 'edi_dirgeneral AS Director General, '.
@@ -117,6 +118,7 @@ class Acreditacion_m extends CI_Model {
         return $response;
     }
     // --------------------------------------------------------------
+    
     
     /**
      * Leer Sellos.

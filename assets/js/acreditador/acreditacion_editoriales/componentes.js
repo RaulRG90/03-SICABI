@@ -57,12 +57,19 @@ var tabla_editoriales={
                 {'data':'Folio de Editorial','title':'Folio'},
                 {'data':'Razón Social','title':'Editorial'},
                 {'data':'Fecha de acreditación','title':'Fecha de acreditación'},
-                {'data':'Folio de Editorial','title':'Usuario'},
+                {'data':'Usuario','title':'Usuario'},
                 {'data':'Folio de Editorial','title':'Acuse','render':function(data){
                     let btn_descarga_acuse='<button id="btn_descarga_acuse" id_editorial="'+data+'" type="button" class="btn btn-md btn-outline-success m-0 px-3 py-2 z-depth-0 waves-effect"><i class="fa fa-file"></i></button>';
                     return btn_descarga_acuse;
+                }},
+                {'data':'Folio de Editorial','title':'Opciones','render':function(data){
+                     
+                    let btns_opcion='<div class="btn-group">'+
+                        '<button id_editorial="'+data+'" type="button" class="btn_edit btn btn-md btn-outline-info m-0 px-3 py-2 z-depth-0 waves-effect"><i class="fa fa-edit"></i></button>'+
+                        '<button id_editorial="'+data+'" type="button" class="btn_eliminar_editorial btn btn-md btn-outline-danger m-0 px-3 py-2 z-depth-0 waves-effect"><i class="fa fa-eraser"></i></button>'+
+                        '</div>';
+                    return btns_opcion;
                 }}
-                
             ],
             'responsive':true,
             'dom':'f',

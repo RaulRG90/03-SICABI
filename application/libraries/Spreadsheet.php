@@ -2,6 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 
 class Spreadsheet{
     
@@ -43,6 +46,7 @@ class Spreadsheet{
     private $sheet_preseleccion;
     private $sheet_seleccion;
     private $spreadsheet;
+    
     public function vista_previa_clasificacion_indicativa($datos,$textos){
         
         
@@ -63,6 +67,8 @@ class Spreadsheet{
         $this->pie('seleccion');
         $this->crear_preseleccion($datos,$textos);
         $this->crear_seleccion($datos,$textos);
+        $this->aplicar_formato();
+        
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="clasificacion_indicativa.xlsx"');
@@ -424,5 +430,39 @@ class Spreadsheet{
         }
         
         return $categorias;
+    }
+    
+    private function aplicar_formato(){
+        
+        $celdas=[
+            'A1','A2','A4','A6:A18','A20','A21','A23','A25:A34',
+            'B2','B3','B6:B16','B18','B20','B21','B23','B25:B34',
+            'C3','C6:C16','C18','C20:C21','C23','C25:C34',
+            'D3','D6:D16','D18','D20:D21','D23','D25:D34',
+            'E2','E3','E6:E16','E18','E20:E21','E23','E25:E34',
+            'F2','F3','F6:F16','F18','F20:F21','F23','F25:F34',
+            'G3','G6:G16','G18','G20:G21','G23','G25:G34',
+            'H3','H6:H16','H18','H20:H21','H23','H25:H34',
+            'I2','I3','I6:I16','I18','I20:I21','I23','I25:I34',
+            'J2','J4:J34',
+            'K2','K3','K5:K16','K18:K34',
+            'L3','L5:L16','L18:L34',
+            'M3','M5:M16','M18:M34',
+            'M3','M5:M16','M18:M34',
+            'N2','N3','N5:N16','N18:N34',
+            'O2','O3','O5:O16','O18:O34',
+            'P3','P5:P16','P18:P34',
+            'Q3','Q5:Q16','Q18:Q34',
+            'R2','R3','R5:R16','R18:R34'
+        ];
+        
+        foreach($celdas as $celda){
+            $this->sheet_preseleccion->getStyle($celda)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_HAIR);
+            $this->sheet_seleccion->getStyle($celda)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_HAIR);
+        }
+        $this->sheet_preseleccion->getColumnDimension('A')->setWidth(45);
+        $this->sheet_preseleccion->getColumnDimension('J')->setWidth(60);
+        $this->sheet_seleccion->getColumnDimension('A')->setWidth(45);
+        $this->sheet_seleccion->getColumnDimension('J')->setWidth(60);
     }
 }

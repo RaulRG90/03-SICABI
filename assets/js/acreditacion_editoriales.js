@@ -20,8 +20,112 @@ var numSellos=1;
     $(document).on("click", "#btnCancelar", function(){
         
         $('#mdlAcreditarEditorial').css('display','none');
+        $('#mdl_editar_editorial').css('display','none');
         $('#tabla_editoriales').css('display','block');
     });
+    
+    $(document).off("click", ".btn_edit");
+    $(document).on("click", ".btn_edit", function(){
+            let idEditorial=$(this).attr('id_editorial');
+            
+            datosJSON={
+                'id':idEditorial
+            };
+
+            $.ajax({
+                async: false,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                url: api_buscar_editorial,
+                data: datosJSON,
+                success: function(datos){
+                    
+                    sessionStorage.clear();
+                    datos.forEach(function(editorial){
+                       
+                       sessionStorage.setItem(JSON.stringify(editorial.id),JSON.stringify(editorial));
+                    });
+                },
+                error: function(datos){
+                    
+                    swal("Ateción!", "No se encontraron coincidencias", "warning");
+                }
+            });
+            let editorial=JSON.parse(sessionStorage.getItem('"'+idEditorial+'"'));
+            console.log(editorial);
+            $('#mdl_editar_editorial').modal('show');
+            $('#mdl_editar_editorial #edit_txt_razon_social').focus();
+            $('#mdl_editar_editorial #edit_txt_razon_social').attr('id_editorial',editorial.id);
+            $('#mdl_editar_editorial #edit_txt_razon_social').val(editorial.edi_razonsocial);
+            $('#mdl_editar_editorial #edit_txt_grupo_editorial').val(editorial.edi_grupoedit);
+            $('#mdl_editar_editorial #edit_txt_nombre_director_general').val(editorial.edi_dirgeneral);
+            $('#mdl_editar_editorial #edit_txt_email_director_general').val(editorial.edi_dirmail);
+            $('#mdl_editar_editorial #edit_txt_celular_director_general').val(editorial.edi_dircel);
+            $('#mdl_editar_editorial #edit_txt_nombre_representante_editorial').val(editorial.edi_repnombre);
+            $('#mdl_editar_editorial #edit_txt_cargo_representante_editorial').val(editorial.edi_repcargo);
+            $('#mdl_editar_editorial #edit_txt_email_representante_editorial').val(editorial.edi_repemail);
+            $('#mdl_editar_editorial #edit_txt_observaciones').val(editorial.edi_observaciones);
+            limpiarSellos();
+            let cont=0;
+            editorial.sellos.forEach(function(sello){
+                cont++;
+                $('#mdl_editar_editorial #edit_txt_sello_editorial_'+numSellos).val(sello.sel_sello);
+                if(cont<editorial.sellos.length){
+                    $('#edit_sello_editorial_'+numSellos+' button.btn_agregar_sello_editar').trigger('click');
+                }
+            });
+        });
+    
+     $(document).on("submit", "#frm_editar_editorial",function(event){
+        event.preventDefault();
+        
+        let datosJSON=extraerEditarDatos();
+        
+        $.ajax({
+            url: api_actualizar_editorial,
+            async: true,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            data: datosJSON,
+            success: function(datos){
+                
+                $('#mdl_editar_editorial').modal('hide');
+                swal("Actualización Exitosa!", "La editorial se actualizó con exito", "success");
+                let tabla=$('#tbl_editoriales').DataTable();
+                tabla.ajax.reload(null, false);
+            },
+            error: function(datos){
+                
+                swal("Error en la actualización!", "La editorial no se pudo actualizar con exito", "error");
+                document.write(datos.responseText);
+            }
+        });
+    });
+        
+    $(document).off("click", ".btn_eliminar_editorial");
+    $(document).on("click", ".btn_eliminar_editorial", function(){
+            
+            let idEditorial=$(this).attr('id_editorial');
+            
+            $.ajax({
+                'url':api_eliminar_editorial,
+                'type':'GET',
+                'data':'idEditorial='+idEditorial,
+                'dataType':'json',
+                'success':function(){
+                    swal("Editorial Eliminada!", "La editorial se eliminó con exito!", "success");
+                    let tabla=$('#tbl_editoriales').DataTable();
+                    tabla.ajax.reload(null, false);
+                    
+                },
+                'error':function(data){
+                    swal("Error!", "La editorial no se pudo eliminar con exito!", "error");
+                    console.log(data)
+                }
+            });
+        });
     
     function habilitarAgregarSello(){
         
@@ -118,6 +222,10 @@ var numSellos=1;
             success: function(datos){
                 
                 swal("Registro Exitoso!", "La editorial se acredito con exito", "success");
+                $('#frmAcreditarEditorial').trigger('reset');
+                limpiarSellos();
+                let tabla=$('#tbl_editoriales').DataTable();
+                tabla.ajax.reload(null, false);
             },
             error: function(datos){
                 
@@ -161,115 +269,6 @@ var numSellos=1;
         sellos+='}';
         
         return sellos;
-    }
-    
-//    Buscar Editorial
-    $('#btn_buscar_editorial').on('click',function(){
-        
-        let valorBusqueda=$('#txt_buscar_editorial').val();
-        let datosJSON='';
-
-        if(valorBusqueda.length>=1){
-            
-            if($.isNumeric(valorBusqueda)){
-            
-                datosJSON={
-                    'id':valorBusqueda
-                };
-            }
-            else{
-
-                datosJSON={
-                    'edi_razonsocial':valorBusqueda
-                };
-            }
-
-            $.ajax({
-                async: true,
-                type: "POST",
-                dataType: "json",
-                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-                url: apiBuscarEditorial,
-                data: datosJSON,
-                success: function(datos){
-                    
-                    sessionStorage.clear();
-                    datos.forEach(function(editorial){
-                       
-                       sessionStorage.setItem(JSON.stringify(editorial.id),JSON.stringify(editorial));
-                    });
-                    
-                    crearTablaCoincidencias(datos);
-                },
-                error: function(datos){
-                    
-                    swal("Ateción!", "No se encontraron coincidencias", "warning");
-                }
-            });
-        }
-        else{
-            console.log('error');
-            $('#txt_buscar_editorial').tooltip();
-        }
-        
-    });
-    
-    function crearTablaCoincidencias(datos){
-        
-        
-        $('#tbl_editoriales_acreditadas').remove();
-        $('#div_editoriales_acreditadas').append($('<table>',{"id":"tbl_editoriales_acreditadas","class":"table table-hover"}));
-        $('#tbl_editoriales_acreditadas').append($('<thead>'));
-        $('#tbl_editoriales_acreditadas thead').append($('<tr>'));
-        $('#tbl_editoriales_acreditadas thead tr').append($('<td>').text('Folio'));
-        $('#tbl_editoriales_acreditadas thead tr').append($('<td>').text('Razón Social'));
-        $('#tbl_editoriales_acreditadas thead tr').append($('<td>').text('Editorial'));
-        $('#tbl_editoriales_acreditadas thead tr').append($('<td>').text('Acuse'));
-        $('#tbl_editoriales_acreditadas thead tr').append($('<td>').text('Opciones'));
-        $('#tbl_editoriales_acreditadas').append($('<tbody>'));
-        
-        
-        datos.forEach(function(element){
-            
-        $('#tbl_editoriales_acreditadas tbody').append($('<tr>',{'id':element.id}).append($('<td>').text(element.id)).append($('<td>').text(element.edi_razonsocial)).append($('<td>').text(element.edi_grupoedit)).append($('<td>').append('<i class="fa fa-file"></i>')).append($('<td>').append($('<div>',{'class':'btn-group btn-group-sm'}).append($('<button>',{'class':'btn btn-primary btn_edit'}).append($('<i>',{'class':'fa fa-edit'}))).append($('<button>',{'class':'btn btn-danger btn_eliminar_editorial'}).append($('<i>',{'class':'fa fa-eraser'}))))));
-        });
-        
-        $('#mdlAcreditarEditorial').css('display','none');
-        
-        habilitarEditarEditorial();
-        habilitarEliminarEditorial();
-    }
-
-    function habilitarEditarEditorial(){
-        
-        
-        $('.btn_edit').on('click',function(){
-        
-            let idEditorial=$(this).parent().parent().parent().attr('id');
-            let editorial=JSON.parse(sessionStorage.getItem('"'+idEditorial+'"'));
-            
-            $('#mdl_editar_editorial').modal('show');
-            $('#mdl_editar_editorial #edit_txt_razon_social').focus();
-            $('#mdl_editar_editorial #edit_txt_razon_social').attr('id_editorial',editorial.id)
-            $('#mdl_editar_editorial #edit_txt_razon_social').val(editorial.edi_razonsocial);
-            $('#mdl_editar_editorial #edit_txt_grupo_editorial').val(editorial.edi_grupoedit);
-            $('#mdl_editar_editorial #edit_txt_nombre_director_general').val(editorial.edi_dirgeneral);
-            $('#mdl_editar_editorial #edit_txt_email_director_general').val(editorial.edi_dirmail);
-            $('#mdl_editar_editorial #edit_txt_celular_director_general').val(editorial.edi_dircel);
-            $('#mdl_editar_editorial #edit_txt_nombre_representante_editorial').val(editorial.edi_repnombre);
-            $('#mdl_editar_editorial #edit_txt_cargo_representante_editorial').val(editorial.edi_repcargo);
-            $('#mdl_editar_editorial #edit_txt_email_representante_editorial').val(editorial.edi_repemail);
-            $('#mdl_editar_editorial #edit_txt_observaciones').val(editorial.edi_observaciones);
-            limpiarSellos();
-            let cont=0;
-            editorial.sellos.forEach(function(sello){
-                cont++;
-                $('#mdl_editar_editorial #edit_txt_sello_editorial_'+numSellos).val(sello.sel_sello);
-                if(cont<editorial.sellos.length){
-                    $('#edit_sello_editorial_'+numSellos+' button.btn_agregar_sello_editar').trigger('click');
-                }
-            });
-        });
     }
 
     function limpiarSellos(){
@@ -351,55 +350,6 @@ var numSellos=1;
         habilitarAgregarSelloEditar();
     }
     
-    function habilitarEliminarEditorial(){
-        
-        $('.btn_eliminar_editorial').off('click');
-        $('.btn_eliminar_editorial').on('click',function(){
-            
-            let idEditorial=$(this).parent().parent().parent().attr('id');
-            $(this).parent().parent().parent().remove();
-            
-            $.ajax({
-                'url':apiEliminarEditorial,
-                'type':'GET',
-                'data':'idEditorial='+idEditorial,
-                'dataType':'json',
-                'success':function(){
-                    swal("Editorial Eliminada!", "La editorial se eliminó con exito!", "success");
-                },
-                'error':function(data){
-                    swal("Error!", "La editorial no se pudo eliminar con exito!", "error");
-                    console.log(data)
-                }
-            });
-        });
-    }
-    
-    $('#frm_editar_editorial').on('submit',function(event){
-        event.preventDefault();
-        
-        let datosJSON=extraerEditarDatos();
-        
-        $.ajax({
-            url: apiActualizarEditorial,
-            async: true,
-            type: "POST",
-            dataType: "json",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            data: datosJSON,
-            success: function(datos){
-                
-                $('#mdl_editar_editorial').modal('hide');
-                swal("Actualización Exitosa!", "La editorial se actualizó con exito", "success");
-                $('#btn_buscar_editorial').trigger('click');
-            },
-            error: function(datos){
-                
-                swal("Error en la actualización!", "La editorial no se pudo actualizar con exito", "error");
-                document.write(datos.responseText);
-            }
-        });
-    });
     
     function extraerEditarDatos(){
         
