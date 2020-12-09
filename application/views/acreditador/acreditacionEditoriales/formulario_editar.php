@@ -37,7 +37,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Sello Editorial:</span>
                             </div>
-                            <input type="text" class="form-control sello_editorial" placeholder="Nuevo sello editorial" id="edit_txt_sello_editorial_1" />
+                            <input type="text" class="form-control sello_editorial" placeholder="Nuevo sello editorial" id="edit_txt_sello_editorial_1" required="required" />
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-primary btn_agregar_sello_editar">
                                     <i class="far fa-plus-square"></i>

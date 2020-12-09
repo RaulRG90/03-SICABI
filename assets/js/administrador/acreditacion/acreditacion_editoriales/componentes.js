@@ -40,7 +40,7 @@ var tabla_editoriales={
                 {'data':'Folio de Editorial','title':'Folio'},
                 {'data':'Razón Social','title':'Editorial'},
                 {'data':'Fecha de acreditación','title':'Fecha de acreditación'},
-                {'data':'Folio de Editorial','title':'Usuario'},
+                {'data':'Usuario','title':'Usuario'},
                 {'data':'Folio de Editorial','title':'Acuse','render':function(data){
                     let btn_descarga_acuse='<button id="btn_descarga_acuse" id_editorial="'+data+'" type="button" class="btn btn-md btn-outline-success m-0 px-3 py-2 z-depth-0 waves-effect"><i class="fa fa-file"></i></button>';
                     return btn_descarga_acuse;

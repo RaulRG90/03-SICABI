@@ -87,6 +87,104 @@ class Acreditacion extends CI_Controller{
     //--------------------------------------------------------------------------
     
     /**
+    * Define las reglas de validación.
+    *
+    * @return  array Lista de reglas.
+    */
+    private function reglas_validacion($action){
+        
+        switch($action){
+            
+            case 'acreditar_editorial':
+                $rules=[
+                    [
+                        'field'=>'edi_razonsocial',
+                        'label'=>'Razón social',
+                        'rules'=>['required','trim','max_length[250]','is_unique[editoriales.edi_razonsocial]'],
+                        'errors' => array(
+                            'is_unique' => 'La razón social ya existe'
+                        ),
+                    ],
+                    [
+                        'field'=>'edi_grupoedit',
+                        'label'=>'Grupo editorial',
+                        'rules'=>['required','trim','max_length[250]','is_unique[editoriales.edi_grupoedit]'],
+                        'errors' => array(
+                            'is_unique' => 'El grupo editorial ya existe'
+                        )
+                    ],
+                    [
+                        'field'=>'edi_dirgeneral',
+                        'label'=>'Director general',
+                        'rules'=>['required','trim','max_length[250]','alpha_numeric_spaces']
+                    ],
+                    [
+                        'field'=>'edi_dirmail',
+                        'label'=>'E-mail del director',
+                        'rules'=>['required','trim','valid_email','is_unique[editoriales.edi_dirmail]'],
+                        'errors' => array(
+                            'is_unique' => 'El e-mail del director ya existe'
+                        )
+                    ],
+                    [
+                        'field'=>'edi_dircel',
+                        'label'=>'Celular del director',
+                        'rules'=>['required','trim','numeric']
+                    ],
+                    [
+                        'field'=>'edi_repnombre',
+                        'label'=>'Nombre del representante',
+                        'rules'=>['required','trim','max_length[250]','alpha_numeric_spaces']
+                    ],
+                    [
+                        'field'=>'edi_repcargo',
+                        'label'=>'Cargo del representante',
+                        'rules'=>['required','trim','max_length[250]','alpha_numeric_spaces']
+                    ],
+                    [
+                        'field'=>'edi_repemail',
+                        'label'=>'E-mail del representante',
+                        'rules'=>['required','trim','valid_email','is_unique[editoriales.edi_repemail]'],
+                        'errors' => array(
+                            'is_unique' => 'El e-mail del representante ya existe'
+                        )
+                    ],
+                    [
+                        'field'=>'edi_observaciones',
+                        'label'=>'Observaciones',
+                        'rules'=>[]
+                    ],
+                    [
+                        'field'=>'sellos',
+                        'label'=>'Sellos editoriales',
+                        'rules'=>['required',['sello_unico',function($sellos){
+                            
+                            $db=$this->Acreditacion_m;
+                            $sellos=json_decode($sellos);
+                            
+                            $validacion=true;
+                
+                            foreach($sellos as $sello){
+
+                                $s=$db->leer_sello($sello);
+                                if(isset($s)){
+                                    
+                                    $this->form_validation->set_message('sello_unico',"Dentro de los {field} el sello ".$s->sel_sello." ya esta en uso");
+                                    $validacion=false;
+                                }
+                            }
+                            return $validacion;
+                        }]]
+                    ]
+                ];
+                break;
+        }
+        
+        return $rules;
+    }
+    // --------------------------------------------------------------
+        
+    /**
     * Acreditación de Editoriales.
     * 
     * Muestra el GUI para visualizar las editoriales acreditadas.
@@ -126,42 +224,63 @@ class Acreditacion extends CI_Controller{
     }
     //--------------------------------------------------------------------------
     
-    public function acreditarEditorial(){
+    public function acreditar_editorial(){
         
         $db=$this->Acreditacion_m;
         
-        $datos_acreditacion=[
-            'usu_id'=>$this->session->userdata('id'),
-            'edi_razonsocial'=>$this->input->post('razonSocial'),
-            'edi_grupoedit'=>$this->input->post('grupoEditorial'),
-            'sellos'=>json_decode($this->input->post('sellos')),
-            'edi_dirgeneral'=>$this->input->post('nombreDirectorGeneral'),
-            'edi_dirmail'=>$this->input->post('emailDirectorGeneral'),
-            'edi_dircel'=>$this->input->post('celularDirectorGeneral'),
-            'edi_repnombre'=>$this->input->post('nombreRepresentanteEditorial'),
-            'edi_repcargo'=>$this->input->post('cargoRepresentanteEditorial'),
-            'edi_repemail'=>$this->input->post('emailRepresentanteEditorial'),
-            'edi_observaciones'=>$this->input->post('observaciones'),
-        ];
+        $rules=$this->reglas_validacion('acreditar_editorial');
         
-        $result=$db->crearEditorial($datos_acreditacion);
+        $this->form_validation->set_rules($rules);
         
-        $data=['edi_razonsocial'=>$datos_acreditacion['edi_razonsocial']];
-        $editorial=$db->leer_editorial($data)->result_array()[0];
-        $datos_usuario=[
-            'usu_id'=>$editorial['id'],
-            'id_perfil'=>'3',
-            'id_modulo'=>'3',
-            'usu_nombre'=>$datos_acreditacion['edi_razonsocial'],
-            'usu_login'=>'l'.$datos_acreditacion['edi_razonsocial'],
-            'usu_pass'=>'123',
-            'usu_creador'=>'1'
-        ];
+        if($this->form_validation->run()==TRUE){
+            
+            $datos_acreditacion=[
+                'usu_id'=>$this->session->userdata('id'),
+                'edi_razonsocial'=>set_value('edi_razonsocial'),
+                'edi_grupoedit'=>set_value('edi_grupoedit'),
+                'sellos'=>json_decode($this->input->post('sellos')),
+                'edi_dirgeneral'=>set_value('edi_dirgeneral'),
+                'edi_dirmail'=>set_value('edi_dirmail'),
+                'edi_dircel'=>set_value('edi_dircel'),
+                'edi_repnombre'=>set_value('edi_repnombre'),
+                'edi_repcargo'=>set_value('edi_repcargo'),
+                'edi_repemail'=>set_value('edi_repemail'),
+                'edi_observaciones'=>set_value('edi_observaciones')
+            ];
         
-        $result=$db->crear_usuario_editorial($datos_usuario);
+            $result=$db->crear_editorial($datos_acreditacion);
+            if(!isset($result['error'])){
+
+                $data=['edi_razonsocial'=>$datos_acreditacion['edi_razonsocial']];
+                $editorial=$db->leer_editorial($data)->result_array()[0];
+                $datos_usuario=[
+                    'usu_id'=>$editorial['id'],
+                    'id_perfil'=>'3',
+                    'id_modulo'=>'3',
+                    'usu_nombre'=>$datos_acreditacion['edi_razonsocial'],
+                    'usu_login'=>'l'.$datos_acreditacion['edi_razonsocial'],
+                    'usu_pass'=>'123',
+                    'usu_creador'=>'1'
+                ];
+
+                $result=$db->crear_usuario_editorial($datos_usuario);
+
+                $datos_editorial=['usu_id'=>$editorial['id']];
+                $result=$db->actualizar_editorial($datos_editorial,$editorial['id']);
+                $result['message']='Editorial acreditada';
+            }
+        }
+        else{
+            
+            $result=[
+                'error'=>[
+                    'code'=>'v005',
+                    'message'=>validation_errors()
+                ]
+            ];
+        }
         
-        $datos_editorial=['usu_id'=>$editorial['id']];
-        $result=$db->actualizar_editorial($datos_editorial,$editorial['id']);
+        
         echo json_encode($result);
     }
     
@@ -169,7 +288,7 @@ class Acreditacion extends CI_Controller{
         
         $db=$this->Acreditacion_m;
         
-        $id=$this->input->get('idEditorial');
+        $id=$this->input->post('usu_id');
         
         $result=$db->eliminarEditorial($id);
             
@@ -205,7 +324,7 @@ class Acreditacion extends CI_Controller{
         return;
     }
     
-    public function actualizarEditorial(){
+    public function actualizar_editorial(){
         
         $db=$this->Acreditacion_m;
         

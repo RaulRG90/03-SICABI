@@ -251,7 +251,8 @@ class Acreditacion_m extends CI_Model{
     public function leer_editoriales(){
         
         $this->db->select(
-                'usu_id AS Folio de Editorial, '.
+                'id AS Folio de Editorial, '.
+                'usu_nombre AS Usuario, '.
                 'edi_razonsocial AS Razón Social, '.
                 'edi_grupoedit AS Grupo Editorial, '.
                 'edi_dirgeneral AS Director General, '.
@@ -274,7 +275,9 @@ class Acreditacion_m extends CI_Model{
                 'edi_telefonos AS Teléfono, '.
                 'edi_email AS Correo electrónico'
         );
-        $query=$this->db->get('editoriales');
+        $this->db->from('editoriales');
+        $this->db->join('usuarios','editoriales.usu_id = usuarios.usu_id');
+        $query=$this->db->get();
 
         if(empty($query)){
 

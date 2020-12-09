@@ -107,12 +107,23 @@ var numSellos=1;
     $(document).off("click", ".btn_eliminar_editorial");
     $(document).on("click", ".btn_eliminar_editorial", function(){
             
-            let idEditorial=$(this).attr('id_editorial');
+        let idEditorial=$(this).attr('id_editorial');
             
+        swal({
+            title:'¿Estas seguro?',
+            text:'¡No podras deshacer esto!',
+            type:'warning',
+            showCancelButton:true,
+            confirmButtonClass:"btn-danger",
+            confirmButtonText:"¡Si, Hazlo!",
+            closeOnConfirm: false
+        },function(){
+            
+            let data={'usu_id':idEditorial};
             $.ajax({
                 'url':api_eliminar_editorial,
-                'type':'GET',
-                'data':'idEditorial='+idEditorial,
+                'type':'POST',
+                'data':data,
                 'dataType':'json',
                 'success':function(){
                     swal("Editorial Eliminada!", "La editorial se eliminó con exito!", "success");
@@ -126,6 +137,8 @@ var numSellos=1;
                 }
             });
         });
+            
+    });
     
     function habilitarAgregarSello(){
         
@@ -166,7 +179,8 @@ var numSellos=1;
                 "id":"txt_sello_editorial_"+numSellos,
                 "type":"text",
                 "class":"form-control sello_editorial",
-                "placeholder":"Nuevo sello editorial"
+                "placeholder":"Nuevo sello editorial",
+                "required":"required"
             })).append($('<div>',{
                 "class":"input-group-append"
             }).append($('<button>',{
@@ -210,44 +224,56 @@ var numSellos=1;
     $('#frmAcreditarEditorial').on('submit',function(event){
         
         event.preventDefault();
-        let datosJSON=extraerDatos();
+        event.stopPropagation();
         
-        $.ajax({
+        if(this.checkValidity()===false){
+            this.classList.add('was-validated');
+        }
+        else{
+            
+            let datosJSON=extraerDatos();
+            
+            $.ajax({
             async: true,
             type: "POST",
             dataType: "json",
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             url: api_acreditar_editorial,
             data: datosJSON,
-            success: function(datos){
+            success: function(respuesta){
                 
-                swal("Registro Exitoso!", "La editorial se acredito con exito", "success");
-                $('#frmAcreditarEditorial').trigger('reset');
-                limpiarSellos();
-                let tabla=$('#tbl_editoriales').DataTable();
-                tabla.ajax.reload(null, false);
+                if(respuesta.error){
+                        swal('Error!',respuesta.error.message,'error');
+                    }
+                else{
+                    swal('Exito!',respuesta.message,'success');
+                    $('#frmAcreditarEditorial').trigger('reset');
+                    limpiarSellos();
+                    let tabla=$('#tbl_editoriales').DataTable();
+                    tabla.ajax.reload(null, false);
+                }
             },
             error: function(datos){
                 
-                swal("Error en el registro!", "La editorial no se pudo acreditar con exito", "error");
+                swal('Error!','Error desconocido, comuniquese con el administrador','error');
             }
         });
-        
+        }        
     });
     
     function extraerDatos(){
         
         let acreditacion={
-            "razonSocial":$('#txt_razon_social').val(),
-            "grupoEditorial":$('#txt_grupo_editorial').val(),
+            "edi_razonsocial":$('#txt_razon_social').val(),
+            "edi_grupoedit":$('#txt_grupo_editorial').val(),
             "sellos":extraerSellos(),
-            "nombreDirectorGeneral":$('#txt_nombre_director_general').val(),
-            "emailDirectorGeneral":$('#txt_email_director_general').val(),
-            "celularDirectorGeneral":$('#txt_celular_director_general').val(),
-            "nombreRepresentanteEditorial":$('#txt_nombre_representante_editorial').val(),
-            "cargoRepresentanteEditorial":$('#txt_cargo_representante_editorial').val(),
-            "emailRepresentanteEditorial":$('#txt_email_representante_editorial').val(),
-            "observaciones":$('#txt_observaciones').val()
+            "edi_dirgeneral":$('#txt_nombre_director_general').val(),
+            "edi_dirmail":$('#txt_email_director_general').val(),
+            "edi_dircel":$('#txt_celular_director_general').val(),
+            "edi_repnombre":$('#txt_nombre_representante_editorial').val(),
+            "edi_repcargo":$('#txt_cargo_representante_editorial').val(),
+            "edi_repemail":$('#txt_email_representante_editorial').val(),
+            "edi_observaciones":$('#txt_observaciones').val()
         };
         
         return acreditacion;
@@ -311,7 +337,8 @@ var numSellos=1;
                 "id":"edit_txt_sello_editorial_"+numSellos,
                 "type":"text",
                 "class":"form-control edit_sello_editorial",
-                "placeholder":"Nuevo sello editorial"
+                "placeholder":"Nuevo sello editorial",
+                "required":"required"
             })).append($('<div>',{
                 "class":"input-group-append"
             }).append($('<button>',{

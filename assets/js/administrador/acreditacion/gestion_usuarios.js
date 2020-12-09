@@ -164,7 +164,7 @@ $(document).ready(function(){
                 }},
                 {'data':'usu_pass','title':'CONTRASEÑA','render':function(data){
                     
-                    let contrasenia='<input class="border-0" '+'type="password" value="'+data+'" />';
+                    let contrasenia='<input class="border-0" type="text" value="'+data+'" />';
                     return contrasenia;
                 }},
                 {'data':'usu_id','title':'OPCIONES','render':function(data){
@@ -234,7 +234,7 @@ $(document).ready(function(){
                 data:data,
                 contentType:'application/x-www-form-urlencoded; charset=UTF-8',
                 success:function(respuesta){
-                    console.log(respuesta);
+                    
                     if(respuesta.error){
                         swal('Error!',respuesta.error.message,'error');
                     }

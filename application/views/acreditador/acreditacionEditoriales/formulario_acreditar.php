@@ -25,9 +25,9 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Grupo Editorial:</span>
                         </div>
-                        <input id="txt_grupo_editorial" type="text" class="form-control" placeholder="Grupo editorial" pattern="[a-zA-Z,áéíóúÁÉÍÓÚÑñ&.' ]+">
+                        <input id="txt_grupo_editorial" type="text" class="form-control" placeholder="Grupo editorial" required="required">
                         <div class="valid-feedback">OK.</div>
-                        <div class="invalid-feedback">El grupo editorial no puede ir vacio y solo acepta letras y signos de puntuación.</div>
+                        <div class="invalid-feedback">El grupo editorial no puede ir vacio</div>
                     </div>
 
 
@@ -37,7 +37,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Sello Editorial:</span>
                             </div>
-                            <input type="text" class="form-control sello_editorial" placeholder="Nuevo sello editorial" id="txt_sello_editorial_1" />
+                            <input type="text" class="form-control sello_editorial" placeholder="Nuevo sello editorial" id="txt_sello_editorial_1" required="required" />
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-primary btn_agregar_sello">
                                     <i class="far fa-plus-square"></i>

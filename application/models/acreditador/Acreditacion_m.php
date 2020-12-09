@@ -79,7 +79,7 @@ class Acreditacion_m extends CI_Model {
         
         $this->db->select(
                 'id AS Folio de Editorial, '.
-                'usu_id AS Usuario, '.
+                'usu_nombre AS Usuario, '.
                 'edi_razonsocial AS Razón Social, '.
                 'edi_grupoedit AS Grupo Editorial, '.
                 'edi_dirgeneral AS Director General, '.
@@ -102,7 +102,9 @@ class Acreditacion_m extends CI_Model {
                 'edi_telefonos AS Teléfono, '.
                 'edi_email AS Correo electrónico'
         );
-        $query=$this->db->get('editoriales');
+        $this->db->from('editoriales');
+        $this->db->join('usuarios','editoriales.usu_id = usuarios.usu_id');
+        $query=$this->db->get();
 
         if(empty($query)){
 
@@ -129,52 +131,81 @@ class Acreditacion_m extends CI_Model {
         return $query;
     }
     
+    /**
+     * Leer Sello.
+     */
+    public function leer_sello($sello){
+        
+        $query=$this->db->get_where('edi_sellos',['sel_sello'=>$sello]);
+        return $query->row();
+    }
+    
     public function eliminarEditorial($id){
         
-        $query="DELETE FROM public.editoriales WHERE id=$id";
+        $query="DELETE FROM public.usuarios WHERE usu_id=$id";
         
         $query=$this->db->query($query);
         
         return $query;
     }
     
-    public function crearEditorial($editorial){
+    public function crear_editorial($editorial){
+        
+        $data=[
+            'usu_id'=>$editorial['usu_id'],
+            'edi_razonsocial'=>$editorial['edi_razonsocial'],
+            'edi_grupoedit'=>$editorial['edi_grupoedit'],
+            'edi_dirgeneral'=>$editorial['edi_dirgeneral'],
+            'edi_dirmail'=>$editorial['edi_dirmail'],
+            'edi_dircel'=>$editorial['edi_dircel'],
+            'edi_repnombre'=>$editorial['edi_repnombre'],
+            'edi_repcargo'=>$editorial['edi_repcargo'],
+            'edi_repemail'=>$editorial['edi_repemail'],
+            'edi_observaciones'=>$editorial['edi_observaciones'],
+            'fecha_creacion'=>nice_date(unix_to_human(now('America/Mexico_City')),'Y-m-d')
+        ];
+        $query=$this->db->insert('editoriales', $data);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
+        }
+        else{
             
-        $query="INSERT INTO public.editoriales (usu_id,edi_razonsocial,edi_grupoedit,edi_dirgeneral,edi_dirmail,edi_dircel,edi_repnombre,edi_repcargo,edi_repemail,edi_observaciones,fecha_creacion) ";
-        
-        $query.='VALUES ';
-        
-            $idUsuario=$editorial['usu_id'];
-            $razonSocial=$editorial['edi_razonsocial'];
-            $grupoEditorial=$editorial['edi_grupoedit'];
-            $dirGeneral=$editorial['edi_dirgeneral'];
+            $razon_social=$editorial['edi_razonsocial'];
             $dirMail=$editorial['edi_dirmail'];
-            $dirCel=$editorial['edi_dircel'];
-            $repNombre=$editorial['edi_repnombre'];
-            $repCargo=$editorial['edi_repcargo'];
-            $repMail=$editorial['edi_repemail'];
-            $observaciones=$editorial['edi_observaciones'];
             $fechaCreacion=nice_date(unix_to_human(now('America/Mexico_City')),'Y-m-d');
             
-            $query.="($idUsuario,'$razonSocial','$grupoEditorial','$dirGeneral','$dirMail',$dirCel,'$repNombre','$repCargo','$repMail','$observaciones','$fechaCreacion')";
-
-        $query=$this->db->query($query);
-        
-        if($query){
+            $this->db->where('edi_razonsocial',$razon_social);
+            $this->db->where('edi_dirmail',$dirMail);
+            $editFolio=$this->db->get('editoriales')->row();
             
-            $query="SELECT id FROM public.editoriales WHERE edi_razonsocial='$razonSocial' AND edi_dirmail='$dirMail'";
-            $editFolio=$this->db->query($query)->row();
-            $query="INSERT INTO public.edi_sellos(edi_id,sel_sello,fecha_creacion)";
-            $query.=" VALUES ";
-            foreach($editorial['sellos'] as $sello){
+            $data=[];
+            foreach($editorial['sellos'] as $key=>$sello){
                 
-                $query.="($editFolio->id,'$sello','$fechaCreacion'),";
+                $data[$key]=[
+                    'edi_id'=>$editFolio->id,
+                    'sel_sello'=>$sello,
+                    'fecha_creacion'=>$fechaCreacion
+                ];
             }
-            $query=substr($query,0,(strlen($query)-1));
-            $query=$this->db->query($query);
+            
+            $query=$this->db->insert_batch('edi_sellos', $data);
+            
+            if(empty($query)){
+                
+                $error=$this->db->error();
+                $response=['error'=>error_array($error)];
+            }
+            else{
+                
+                $response['message']='Editorial Acreditada';
+                $response['editorial']=$query;
+            }
         }
         
-        return $query;
+        return $response;
     }
     
     public function leer_editorial($datos){

@@ -3,10 +3,10 @@
 var componentes=base_url+'assets/js/acreditador/acreditacion_editoriales/componentes.min.js';
 
 var api_leer_editoriales=base_url+'acreditador/acreditacion/leer_editoriales';
-var api_acreditar_editorial=base_url+'acreditador/acreditacion/acreditarEditorial';
+var api_acreditar_editorial=base_url+'acreditador/acreditacion/acreditar_editorial';
 var api_buscar_editorial=base_url+'acreditador/acreditacion/buscarEditoriales';
 var api_eliminar_editorial=base_url+'acreditador/acreditacion/eliminarEditorial';
-var api_actualizar_editorial=base_url+'acreditador/acreditacion/actualizarEditorial';
+var api_actualizar_editorial=base_url+'acreditador/acreditacion/actualizar_editorial';
 
 var componente_cabecera;
 var componente_btn_acreditar;

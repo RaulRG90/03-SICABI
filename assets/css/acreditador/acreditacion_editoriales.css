@@ -14,3 +14,9 @@
     width:100% !important;
     text-align:left;
 };
+
+.btn_agregar_sello{
+    
+    margin:0px 1px 0 1px !important;
+    padding:5px 34.240px 5px 34.240px !important;
+}
