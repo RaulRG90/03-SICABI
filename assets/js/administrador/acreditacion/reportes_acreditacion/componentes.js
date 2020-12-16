@@ -156,7 +156,7 @@ var modal_descarga_excel={
 //--------------------------------------------------------------------------
 
 /* ******************************** *
-* ***** Módal descargar excel ***** *
+* ***** Tabla descargar excel ***** *
 * ********************************* */
 var tbl_descargar_excel={
     render:function(){

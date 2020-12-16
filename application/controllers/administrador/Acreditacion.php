@@ -382,4 +382,20 @@ class Acreditacion extends CI_Controller{
         echo json_encode($editoriales,JSON_UNESCAPED_UNICODE);
     }
     
+    public function crear_acuse($editorial){
+        
+        $db=$this->Acreditacion_m;
+        
+        $msg='acuse_acreditacion/'.$editorial;
+        
+        $usuario=$db->leer_usuario_editorial($editorial)['usuario'][0];
+        
+        $registro=$db->leer_periodo_registro()['modulo_registro'][0];
+        
+        $editorial=$db->leer_editorial(['id'=>$editorial])->result_array();
+        
+        
+        $this->pdf->acuse_acreditacion($msg,$editorial,$usuario,$registro);
+    }
+    
 }

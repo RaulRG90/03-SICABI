@@ -8,7 +8,7 @@
 <div id="contenedor_principal" class="container-fluid">
     <header id="cabecera_principal"></header>
     <div id="descargar_excel" class="d-flex flex-row-reverse bd-highlight"></div>
-    <section id="seccion_principal"></section>
+    <section id="seccion_principal" style="margin-bottom:40px"></section>
     <footer id="modales"></footer>
 </div>
 

@@ -77,7 +77,7 @@ var numSellos=1;
             });
         });
     
-     $(document).on("submit", "#frm_editar_editorial",function(event){
+    $(document).on("submit", "#frm_editar_editorial",function(event){
         event.preventDefault();
         
         let datosJSON=extraerEditarDatos();
@@ -243,15 +243,30 @@ var numSellos=1;
             success: function(respuesta){
                 
                 if(respuesta.error){
-                        swal('Error!',respuesta.error.message,'error');
-                    }
+                    swal('Error!',respuesta.error.message,'error');
+                }
                 else{
-                    swal('Exito!',respuesta.message,'success');
+                    swal({
+                        title:'¡Exito!',
+                        text:'Editorial Acreditada',
+                        type:'success',
+                        showCancelButton:true,
+                        cancelButtonText:"Cerrar",
+                        cancelButtonClass:"btn-danger",
+                        confirmButtonClass:"btn-info",
+                        confirmButtonText:"Descargar",
+                        closeOnConfirm: false
+                    },
+                    function(){
+            
+                        window.open(api_crear_acuse+datosJSON.edi_razonsocial);
+                    });
+                    
                     $('#frmAcreditarEditorial').trigger('reset');
                     limpiarSellos();
                     let tabla=$('#tbl_editoriales').DataTable();
                     tabla.ajax.reload(null, false);
-                }
+                }   
             },
             error: function(datos){
                 

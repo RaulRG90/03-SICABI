@@ -7,6 +7,7 @@ var api_acreditar_editorial=base_url+'acreditador/acreditacion/acreditar_editori
 var api_buscar_editorial=base_url+'acreditador/acreditacion/buscarEditoriales';
 var api_eliminar_editorial=base_url+'acreditador/acreditacion/eliminarEditorial';
 var api_actualizar_editorial=base_url+'acreditador/acreditacion/actualizar_editorial';
+var api_crear_acuse=base_url+'acreditador/acreditacion/crear_acuse/';
 
 var componente_cabecera;
 var componente_btn_acreditar;
@@ -114,4 +115,5 @@ $(document).ready(function(){
         
     }
     //--------------------------------------------------------------------------
+
 });

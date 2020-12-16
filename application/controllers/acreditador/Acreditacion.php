@@ -20,6 +20,7 @@ class Acreditacion extends CI_Controller{
      */
     private $permiso='acreditador';
     
+    
     /**
     * Constructor.
     * 
@@ -121,9 +122,9 @@ class Acreditacion extends CI_Controller{
                     [
                         'field'=>'edi_dirmail',
                         'label'=>'E-mail del director',
-                        'rules'=>['required','trim','valid_email','is_unique[editoriales.edi_dirmail]'],
+                        'rules'=>['required','trim','valid_email'],
                         'errors' => array(
-                            'is_unique' => 'El e-mail del director ya existe'
+                            
                         )
                     ],
                     [
@@ -144,9 +145,9 @@ class Acreditacion extends CI_Controller{
                     [
                         'field'=>'edi_repemail',
                         'label'=>'E-mail del representante',
-                        'rules'=>['required','trim','valid_email','is_unique[editoriales.edi_repemail]'],
+                        'rules'=>['required','trim','valid_email'],
                         'errors' => array(
-                            'is_unique' => 'El e-mail del representante ya existe'
+                            
                         )
                     ],
                     [
@@ -159,18 +160,22 @@ class Acreditacion extends CI_Controller{
                         'label'=>'Sellos editoriales',
                         'rules'=>['required',['sello_unico',function($sellos){
                             
-                            $db=$this->Acreditacion_m;
                             $sellos=json_decode($sellos);
                             
                             $validacion=true;
                 
-                            foreach($sellos as $sello){
-
-                                $s=$db->leer_sello($sello);
-                                if(isset($s)){
+                            foreach($sellos as $sello1){
+                                $conteo=0;
+                                foreach($sellos as $sello2){
                                     
-                                    $this->form_validation->set_message('sello_unico',"Dentro de los {field} el sello ".$s->sel_sello." ya esta en uso");
-                                    $validacion=false;
+                                    if($sello1==$sello2){
+                                        $conteo++;
+                                    }
+                                    
+                                    if($conteo>1){
+                                        $this->form_validation->set_message('sello_unico',"El sello ".$sello1." ya esta en uso");
+                                        $validacion=false;
+                                    }
                                 }
                             }
                             return $validacion;
@@ -202,8 +207,8 @@ class Acreditacion extends CI_Controller{
     public function leer_editoriales(){
         
         $db=$this->Acreditacion_m;
-        
-        $editoriales=$db->leer_editoriales()['editoriales'];
+        $acreditador=$this->session->userdata('nombre');
+        $editoriales=$db->leer_editoriales($acreditador)['editoriales'];
         
         echo json_encode($editoriales,JSON_UNESCAPED_UNICODE);
     }
@@ -245,7 +250,8 @@ class Acreditacion extends CI_Controller{
                 'edi_repnombre'=>set_value('edi_repnombre'),
                 'edi_repcargo'=>set_value('edi_repcargo'),
                 'edi_repemail'=>set_value('edi_repemail'),
-                'edi_observaciones'=>set_value('edi_observaciones')
+                'edi_observaciones'=>set_value('edi_observaciones'),
+                'nombre_acreditador'=>$this->session->userdata('nombre')
             ];
         
             $result=$db->crear_editorial($datos_acreditacion);
@@ -350,6 +356,22 @@ class Acreditacion extends CI_Controller{
     public function historial(){   
         echo ('historial');
     }
-
+    
+    public function crear_acuse($editorial){
+        
+        $db=$this->Acreditacion_m;
+        
+        $editorial=urldecode($editorial);
+        $msg='acuse_acreditacion/'.$editorial;
+        
+        $usuario=$db->leer_usuario_editorial($editorial)['usuario'][0];
+        
+        $registro=$db->leer_periodo_registro()['modulo_registro'][0];
+        
+        $editorial=$db->leer_editorial(['id'=>$editorial])->result_array();
+        
+        
+        $this->pdf->acuse_acreditacion($msg,$editorial,$usuario,$registro);
+    }
 }
 

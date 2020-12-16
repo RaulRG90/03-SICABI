@@ -57,9 +57,8 @@ var tabla_editoriales={
                 {'data':'Folio de Editorial','title':'Folio'},
                 {'data':'Razón Social','title':'Editorial'},
                 {'data':'Fecha de acreditación','title':'Fecha de acreditación'},
-                {'data':'Usuario','title':'Usuario'},
                 {'data':'Folio de Editorial','title':'Acuse','render':function(data){
-                    let btn_descarga_acuse='<button id="btn_descarga_acuse" id_editorial="'+data+'" type="button" class="btn btn-md btn-outline-success m-0 px-3 py-2 z-depth-0 waves-effect"><i class="fa fa-file"></i></button>';
+                    let btn_descarga_acuse='<a id="btn_descarga_acuse" id_editorial="'+data+'" href="'+base_url+'acreditador/acreditacion/crear_acuse/'+data+'" class="btn btn-md btn-outline-success m-0 px-3 py-2 z-depth-0 waves-effect" target="_blank"><i class="fa fa-file"></i></a>';
                     return btn_descarga_acuse;
                 }},
                 {'data':'Folio de Editorial','title':'Opciones','render':function(data){

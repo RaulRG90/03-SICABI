@@ -75,7 +75,7 @@ class Acreditacion_m extends CI_Model {
      *
      * @return  boolean .
      */
-    public function leer_editoriales(){
+    public function leer_editoriales($acreditador){
         
         $this->db->select(
                 'id AS Folio de Editorial, '.
@@ -104,6 +104,7 @@ class Acreditacion_m extends CI_Model {
         );
         $this->db->from('editoriales');
         $this->db->join('usuarios','editoriales.usu_id = usuarios.usu_id');
+        $this->db->where('acreditador',$acreditador);
         $query=$this->db->get();
 
         if(empty($query)){
@@ -162,7 +163,8 @@ class Acreditacion_m extends CI_Model {
             'edi_repcargo'=>$editorial['edi_repcargo'],
             'edi_repemail'=>$editorial['edi_repemail'],
             'edi_observaciones'=>$editorial['edi_observaciones'],
-            'fecha_creacion'=>nice_date(unix_to_human(now('America/Mexico_City')),'Y-m-d')
+            'fecha_creacion'=>nice_date(unix_to_human(now('America/Mexico_City')),'Y-m-d'),
+            'acreditador'=>$editorial['nombre_acreditador']
         ];
         $query=$this->db->insert('editoriales', $data);
         
@@ -215,12 +217,12 @@ class Acreditacion_m extends CI_Model {
             if(is_numeric($valor)){
                 
                 $query="SELECT * FROM public.editoriales ";
-                $query.="WHERE $campo=$valor";
+                $query.="WHERE id=$valor";
             }
             else{
                 
                 $query="SELECT * FROM public.editoriales ";
-                $query.="WHERE $campo LIKE '%$valor%'";
+                $query.="WHERE edi_razonsocial LIKE '%$valor%'";
             }
         }
         
@@ -310,4 +312,46 @@ class Acreditacion_m extends CI_Model {
         return $response;
     }
     // --------------------------------------------------------------
+    
+    /**
+     * Leer usuario de editorial.
+     *
+     * @return  boolean .
+     */
+    public function leer_usuario_editorial($id){
+        
+        $query=$this->db->get_where('usuarios',['usu_id'=>$id]);
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
+        }
+        else{
+
+            $response['message']='Datos leidos!';
+            $response['usuario']=$query->result_array();
+        }
+        
+        return $response;
+    }
+    // --------------------------------------------------------------
+    
+    public function leer_periodo_registro(){
+        
+        $query=$this->db->get_where('cat_modulo',['id_modulo'=>'3']);
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
+        }
+        else{
+
+            $response['message']='Datos leidos!';
+            $response['modulo_registro']=$query->result_array();
+        }
+        
+        return $response;
+    }
 }

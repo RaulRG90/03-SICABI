@@ -273,7 +273,8 @@ class Acreditacion_m extends CI_Model{
                 'edi_entidad_federativa AS Entidad Federativa, '.
                 'edi_delegacion AS Alcaldía, '.
                 'edi_telefonos AS Teléfono, '.
-                'edi_email AS Correo electrónico'
+                'edi_email AS Correo electrónico,'.
+                'acreditador'
         );
         $this->db->from('editoriales');
         $this->db->join('usuarios','editoriales.usu_id = usuarios.usu_id');
@@ -345,4 +346,65 @@ class Acreditacion_m extends CI_Model{
         return $response;
     }
     // --------------------------------------------------------------
+    
+    /**
+     * Leer usuario de editorial.
+     *
+     * @return  boolean .
+     */
+    public function leer_usuario_editorial($id){
+        
+        $query=$this->db->get_where('usuarios',['usu_id'=>$id]);
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
+        }
+        else{
+
+            $response['message']='Datos leidos!';
+            $response['usuario']=$query->result_array();
+        }
+        
+        return $response;
+    }
+    // --------------------------------------------------------------
+    
+    public function leer_periodo_registro(){
+        
+        $query=$this->db->get_where('cat_modulo',['id_modulo'=>'3']);
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
+        }
+        else{
+
+            $response['message']='Datos leidos!';
+            $response['modulo_registro']=$query->result_array();
+        }
+        
+        return $response;
+    }
+    
+    public function leer_editorial($datos){
+        
+        foreach($datos as $campo=>$valor){
+            
+            if(is_numeric($valor)){
+                
+                $query="SELECT * FROM public.editoriales ";
+                $query.="WHERE $campo=$valor";
+            }
+            else{
+                
+                $query="SELECT * FROM public.editoriales ";
+                $query.="WHERE $campo LIKE '%$valor%'";
+            }
+        }
+        
+        return $this->db->query($query);
+    }
 }
