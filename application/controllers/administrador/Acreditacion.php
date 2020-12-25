@@ -386,16 +386,17 @@ class Acreditacion extends CI_Controller{
         
         $db=$this->Acreditacion_m;
         
+        $editorial=urldecode($editorial);
         $msg='acuse_acreditacion/'.$editorial;
         
-        $usuario=$db->leer_usuario_editorial($editorial)['usuario'][0];
+        $editorial=$db->leer_editorial('id',$editorial)['editorial'];
+        $sellos=$db->leer_sello_editorial($editorial[0]['id']);
+        
+        $usuario=$db->leer_usuario_editorial($editorial[0]['usu_id'])['usuario'][0];
         
         $registro=$db->leer_periodo_registro()['modulo_registro'][0];
         
-        $editorial=$db->leer_editorial(['id'=>$editorial])->result_array();
-        
-        
-        $this->pdf->acuse_acreditacion($msg,$editorial,$usuario,$registro);
+        $this->pdf->acuse_acreditacion($msg,$editorial,$sellos,$usuario,$registro);
     }
     
 }

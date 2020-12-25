@@ -207,7 +207,7 @@ class Acreditacion extends CI_Controller{
     public function leer_editoriales(){
         
         $db=$this->Acreditacion_m;
-        $acreditador=$this->session->userdata('nombre');
+        $acreditador=$this->session->userdata('id');
         $editoriales=$db->leer_editoriales($acreditador)['editoriales'];
         
         echo json_encode($editoriales,JSON_UNESCAPED_UNICODE);
@@ -223,7 +223,7 @@ class Acreditacion extends CI_Controller{
         
         $db=$this->Acreditacion_m;
         
-        $editorial=$db->leer_editorial($id);
+        $editorial=$db->leer_editorial('id',$id);
         
         echo json_encode($editorial,JSON_UNESCAPED_UNICODE);
     }
@@ -250,22 +250,23 @@ class Acreditacion extends CI_Controller{
                 'edi_repnombre'=>set_value('edi_repnombre'),
                 'edi_repcargo'=>set_value('edi_repcargo'),
                 'edi_repemail'=>set_value('edi_repemail'),
-                'edi_observaciones'=>set_value('edi_observaciones'),
-                'nombre_acreditador'=>$this->session->userdata('nombre')
+                'edi_observaciones'=>set_value('edi_observaciones')
             ];
         
             $result=$db->crear_editorial($datos_acreditacion);
             if(!isset($result['error'])){
 
-                $data=['edi_razonsocial'=>$datos_acreditacion['edi_razonsocial']];
-                $editorial=$db->leer_editorial($data)->result_array()[0];
+                $editorial=$db->leer_editorial('edi_razonsocial',$datos_acreditacion['edi_razonsocial'])['editorial'][0];
+                
+                $permitted_chars='0123456789abcdefghijklmnopqrstuvwxyz';
+                $pass=substr(str_shuffle($permitted_chars), 0, 8);
                 $datos_usuario=[
                     'usu_id'=>$editorial['id'],
                     'id_perfil'=>'3',
                     'id_modulo'=>'3',
                     'usu_nombre'=>$datos_acreditacion['edi_razonsocial'],
-                    'usu_login'=>'l'.$datos_acreditacion['edi_razonsocial'],
-                    'usu_pass'=>'123',
+                    'usu_login'=>SIGLAS.$editorial['id'],
+                    'usu_pass'=>$pass,
                     'usu_creador'=>'1'
                 ];
 
@@ -305,9 +306,9 @@ class Acreditacion extends CI_Controller{
         
         $db=$this->Acreditacion_m;
         
-        $datos=$this->input->post();
+        $datos=$this->input->post('id');
         
-        $editoriales=$db->leer_editorial($datos)->result_array();
+        $editoriales=$db->leer_editorial('id',$datos)['editorial'];
         
         if(!empty($editoriales)){
             
@@ -338,7 +339,7 @@ class Acreditacion extends CI_Controller{
             'id_editorial'=>$this->input->post('id'),
             'edi_razonsocial'=>$this->input->post('razonSocial'),
             'edi_grupoedit'=>$this->input->post('grupoEditorial'),
-            'sellos'=>json_decode($this->input->post('sellos')),
+            'sellos'=>$this->input->post('sellos'),
             'edi_dirgeneral'=>$this->input->post('nombreDirectorGeneral'),
             'edi_dirmail'=>$this->input->post('emailDirectorGeneral'),
             'edi_dircel'=>$this->input->post('celularDirectorGeneral'),
@@ -364,14 +365,21 @@ class Acreditacion extends CI_Controller{
         $editorial=urldecode($editorial);
         $msg='acuse_acreditacion/'.$editorial;
         
-        $usuario=$db->leer_usuario_editorial($editorial)['usuario'][0];
+        if(is_numeric($editorial)){
+            $campo='id';
+        }
+        else{
+            $campo='edi_razonsocial';
+        }
+        
+        $editorial=$db->leer_editorial($campo,$editorial)['editorial'];
+        $sellos=$db->leer_sello_editorial($editorial[0]['id']);
+        
+        $usuario=$db->leer_usuario_editorial($editorial[0]['usu_id'])['usuario'][0];
         
         $registro=$db->leer_periodo_registro()['modulo_registro'][0];
         
-        $editorial=$db->leer_editorial(['id'=>$editorial])->result_array();
-        
-        
-        $this->pdf->acuse_acreditacion($msg,$editorial,$usuario,$registro);
+        $this->pdf->acuse_acreditacion($msg,$editorial,$sellos,$usuario,$registro);
     }
 }
 

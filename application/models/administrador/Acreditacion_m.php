@@ -286,9 +286,19 @@ class Acreditacion_m extends CI_Model{
             return $response=['error'=>error_array($error)];
         }
         else{
-
+            
+            $editoriales=$query->result_array();
+            
+            foreach($editoriales as $key=>$editorial){
+                
+                $usuario=$this->db->get_where('usuarios',['usu_id'=>$editorial['acreditador']])->result_array();
+                $editoriales[$key]['acreditador']=$usuario[0]['usu_nombre'];
+            }
+            
+            
+            
             $response['message']='Datos leidos!';
-            $response['editoriales']=$query->result_array();
+            $response['editoriales']=$editoriales;
         }
         
         return $response;
@@ -389,22 +399,69 @@ class Acreditacion_m extends CI_Model{
         return $response;
     }
     
-    public function leer_editorial($datos){
-        
-        foreach($datos as $campo=>$valor){
+    public function leer_editorial($campo,$valor){
             
-            if(is_numeric($valor)){
-                
-                $query="SELECT * FROM public.editoriales ";
-                $query.="WHERE $campo=$valor";
-            }
-            else{
-                
-                $query="SELECT * FROM public.editoriales ";
-                $query.="WHERE $campo LIKE '%$valor%'";
-            }
+        $this->db->select(
+            'id, '.
+            'editoriales.usu_id as usu_id, '.
+            'edi_razonsocial, '.
+            'edi_grupoedit, '.
+            'edi_dirgeneral, '.
+            'edi_dirmail, '.
+            'edi_dircel, '.
+            'edi_repnombre, '.
+            'edi_repcargo, '.
+            'edi_repemail, '.
+            'edi_observaciones, '.
+            'fecha_creacion, '.
+            'edi_rfc, '.
+            'edi_colonia, '.
+            'edi_calle, '.
+            'edi_numero, '.
+            'edi_cp, '.
+            'edi_ciudad, '.
+            'edi_pais, '.
+            'edi_entidad_federativa, '.
+            'edi_delegacion, '.
+            'edi_telefonos, '.
+            'edi_email,'.
+            'acreditador'
+        );
+        $this->db->from('editoriales');
+        $this->db->join('usuarios','editoriales.usu_id = usuarios.usu_id');
+        $this->db->where($campo,$valor);
+        $query=$this->db->get();
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
         }
+        else{
+
+            $editoriales=$query->result_array();
+
+            foreach($editoriales as $key=>$editorial){
+
+                $usuario=$this->db->get_where('usuarios',['usu_id'=>$editorial['acreditador']])->result_array();
+                $editoriales[$key]['acreditador']=$usuario[0]['usu_nombre'];
+            }
+
+
+
+            $response['message']='Datos leidos!';
+            $response['editorial']=$editoriales;
+        }
+
+        return $response;
+    }
+    
+     /**
+     * Leer Sello.
+     */
+    public function leer_sello_editorial($editorial_id){
         
-        return $this->db->query($query);
+        $query=$this->db->get_where('edi_sellos',['edi_id'=>$editorial_id]);
+        return $query->result_array();
     }
 }

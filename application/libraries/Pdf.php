@@ -48,23 +48,37 @@ class Pdf {
     public function view_pdf_vertical($html = "")
     {
         
-        $mpdf = new \Mpdf\Mpdf([
+        $mpdf=new \Mpdf\Mpdf([
             'margin_top' => 30,
             'margin_left' => 15,
             'margin_right' => 15,
             'margin_bottom' => 30,
             'mirrorMargins' => false
         ]);
-        $mpdf->SetHTMLHeader('
-        <table width="100%">
-            <tr>
-                <td width="30%">
-                    <img src="'.base_url(LOGOTIPO).'" height="50" />
-                </td>
-                <td width="70%" style="font-size:14;text-align: right;font-family: Verdana, Arial, Tahoma, Serif;">'.PROCESO.'<br>Bibliotecas '.BIBLIOTECA.'</br><br> Ciclo Escolar '.CICLO.'
-                </td>
-            </tr>
-        </table><hr>');
+        
+        $mpdf->SetTitle('Razón Social');
+        $mpdf->SetHTMLHeader( 
+            '<table width="100%">'.
+                '<tr style="padding:0 0;">'.
+                    '<td width="50%" style="padding:1px 1px;">'.
+                        '<figure>'.
+                            '<img src="'.base_url(LOGOTIPO).'" height="100" style="marging:0 0;" />'.
+                        '</figure>'.
+                    '</td>'.
+                    '<td width="70%" style="border-bottom: 2px solid black;text-align:center;padding:1px 1px;">'.
+                        '<p style="font-weight: bold;">'.
+                            PROCESO.
+                        '</p>'.
+                        '<p style="font-weight: bold;">'.
+                            'Bibliotecas '.BIBLIOTECA.', Ciclo Escolar '.CICLO.
+                        '</p>'.
+                        '<p style="font-weight: bold;">'.
+                            'Acreditación de Titulares o Representantes Editoriales'.
+                        '</p>'.
+                    '</td>'.
+                '</tr>'.
+            '</table>');
+        
         $mpdf->SetHTMLFooter('<hr>
         <table width="100%">
             <tr>
@@ -74,11 +88,10 @@ class Pdf {
                 Dirección General de Materiales Educativos
                 </td>
                 <td width="33%"></td>
-                <td width="33%" style="font-size:10;text-align:right;font-family: Verdana, Arial, Tahoma, Serif;">{DATE j-m-Y}<br>Página {PAGENO} de {nbpg}</td>
+                <td width="33%" style="font-size:10;text-align:right;font-family: Verdana, Arial, Tahoma, Serif;">'.base_url('acreditador').'<br>Página {PAGENO} de {nbpg}</td>
             </tr>
         </table>');
-        $mpdf->WriteHTML($html);
-        //$mpdf->Output('test.pdf','D');
+        
         $mpdf->Output();
     }
 
@@ -158,7 +171,7 @@ class Pdf {
         $mpdf->Output();
     }
     
-    public function acuse_acreditacion($dir,$editorial,$usuario,$registro){
+    public function acuse_acreditacion($dir,$editorial,$sellos,$usuario,$registro){
         
         $mpdf=new \Mpdf\Mpdf([
             'margin_top' => 30,
@@ -203,11 +216,12 @@ class Pdf {
                 <td width="33%" style="font-size:10;text-align:right;font-family: Verdana, Arial, Tahoma, Serif;">'.base_url($dir).'<br>Página {PAGENO} de {nbpg}</td>
             </tr>
         </table>');
+        
         $mpdf->WriteHTML('<br/>');
         $mpdf->WriteHTML(
                 '<header style="">'.
                     '<h2 style="text-align:center;">'.
-                        'Razón social'.
+                        $editorial[0]['edi_razonsocial'].
                     '</h2>'.
                 '</header>'.
                 '<p style="color:red;text-align:right">'.
@@ -228,7 +242,7 @@ class Pdf {
 ;">Grupo Editorial: </th>'.'<td style="background-color:#c2c2c2">'.$editorial[0]['edi_grupoedit'].'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<th style="text-align:right">Sellos Editoriales: </th>'.'<td>'.$editorial[0]['edi_grupoedit'].'</td>'.
+                        '<th style="text-align:right">Sellos Editoriales: </th>'.'<td>'.$this->extraer_sellos($sellos).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<th style="text-align:center;background-color:gray" colspan="2">Datos del representante</th>'.'<th></th>'.
@@ -255,7 +269,7 @@ class Pdf {
                         '<table style="width:70%;margin:0 auto;text-align:center;border-spacing:50px 1px;">'.
                             '<tr>'.
                                 '<td style="padding-bottom:70px">'.$editorial[0]['edi_repnombre'].'</td>'.
-                                '<td style="padding-bottom:70px">'.$_SESSION['nombre'].'</td>'.
+                                '<td style="padding-bottom:70px">'.$editorial[0]['acreditador'].'</td>'.
                             '</tr>'.
                             '<tr>'.
                                 '<td style="border-top:solid 0.5px;padding:1px;">Nombre y Firma</td>'.
@@ -268,6 +282,14 @@ class Pdf {
         
     }
 
-  
+    public function extraer_sellos($sellos){
+        
+        $extraccion='';
+        foreach($sellos  as $sello){
+            
+            $extraccion.=$sello['sel_sello'].'<br/> ';
+        }
+        return $extraccion;
+    }
 }
    

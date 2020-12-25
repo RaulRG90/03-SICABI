@@ -164,7 +164,7 @@ class Acreditacion_m extends CI_Model {
             'edi_repemail'=>$editorial['edi_repemail'],
             'edi_observaciones'=>$editorial['edi_observaciones'],
             'fecha_creacion'=>nice_date(unix_to_human(now('America/Mexico_City')),'Y-m-d'),
-            'acreditador'=>$editorial['nombre_acreditador']
+            'acreditador'=>$editorial['usu_id']
         ];
         $query=$this->db->insert('editoriales', $data);
         
@@ -210,23 +210,61 @@ class Acreditacion_m extends CI_Model {
         return $response;
     }
     
-    public function leer_editorial($datos){
+    public function leer_editorial($campo,$valor){
         
-        foreach($datos as $campo=>$valor){
-            
-            if(is_numeric($valor)){
-                
-                $query="SELECT * FROM public.editoriales ";
-                $query.="WHERE id=$valor";
-            }
-            else{
-                
-                $query="SELECT * FROM public.editoriales ";
-                $query.="WHERE edi_razonsocial LIKE '%$valor%'";
-            }
+        $this->db->select(
+            'id, '.
+            'editoriales.usu_id as usu_id, '.
+            'edi_razonsocial, '.
+            'edi_grupoedit, '.
+            'edi_dirgeneral, '.
+            'edi_dirmail, '.
+            'edi_dircel, '.
+            'edi_repnombre, '.
+            'edi_repcargo, '.
+            'edi_repemail, '.
+            'edi_observaciones, '.
+            'fecha_creacion, '.
+            'edi_rfc, '.
+            'edi_colonia, '.
+            'edi_calle, '.
+            'edi_numero, '.
+            'edi_cp, '.
+            'edi_ciudad, '.
+            'edi_pais, '.
+            'edi_entidad_federativa, '.
+            'edi_delegacion, '.
+            'edi_telefonos, '.
+            'edi_email,'.
+            'acreditador'
+        );
+        $this->db->from('editoriales');
+        $this->db->join('usuarios','editoriales.usu_id = usuarios.usu_id');
+        $this->db->where($campo,$valor);
+        $query=$this->db->get();
+
+        if(empty($query)){
+
+            $error=$this->db->error();
+            return $response=['error'=>error_array($error)];
         }
-        
-        return $this->db->query($query);
+        else{
+
+            $editoriales=$query->result_array();
+
+            foreach($editoriales as $key=>$editorial){
+
+                $usuario=$this->db->get_where('usuarios',['usu_id'=>$editorial['acreditador']])->result_array();
+                $editoriales[$key]['acreditador']=$usuario[0]['usu_nombre'];
+            }
+
+
+
+            $response['message']='Datos leidos!';
+            $response['editorial']=$editoriales;
+        }
+
+        return $response;
     }
     
     public function actualizarEditorial($editorial){
@@ -242,6 +280,7 @@ class Acreditacion_m extends CI_Model {
         $repMail=$editorial['edi_repemail'];
         $observaciones=$editorial['edi_observaciones'];
         
+        
         $query="UPDATE public.editoriales ";
         $query.="SET edi_razonsocial='$razonSocial', edi_grupoedit='$grupoEditorial', edi_dirgeneral='$dirGeneral', edi_dirmail='$dirMail', edi_dircel='$dirCel', edi_repnombre='$repNombre', edi_repcargo='$repCargo', edi_repemail='$repMail', edi_observaciones='$observaciones' ";
         $query.="WHERE id=$id";
@@ -252,11 +291,12 @@ class Acreditacion_m extends CI_Model {
             
             $query="DELETE FROM public.edi_sellos WHERE edi_id=$id";
             $this->db->query($query);
-            $query="INSERT INTO public.edi_sellos(edi_id,sel_sello)";
+            $fecha_creacion=nice_date(unix_to_human(now('America/Mexico_City')),'Y-m-d');
+            $query="INSERT INTO public.edi_sellos(edi_id,sel_sello,fecha_creacion)";
             $query.=" VALUES ";
             foreach($editorial['sellos'] as $sello){
                 
-                $query.="($id,'$sello'),";
+                $query.="($id,'$sello','$fecha_creacion'),";
             }
             $query=substr($query,0,(strlen($query)-1));
             $query=$this->db->query($query);
@@ -353,5 +393,14 @@ class Acreditacion_m extends CI_Model {
         }
         
         return $response;
+    }
+    
+    /**
+     * Leer Sello.
+     */
+    public function leer_sello_editorial($editorial_id){
+        
+        $query=$this->db->get_where('edi_sellos',['edi_id'=>$editorial_id]);
+        return $query->result_array();
     }
 }

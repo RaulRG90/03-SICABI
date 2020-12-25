@@ -66,6 +66,8 @@ var numSellos=1;
             $('#mdl_editar_editorial #edit_txt_cargo_representante_editorial').val(editorial.edi_repcargo);
             $('#mdl_editar_editorial #edit_txt_email_representante_editorial').val(editorial.edi_repemail);
             $('#mdl_editar_editorial #edit_txt_observaciones').val(editorial.edi_observaciones);
+            
+            $('#frmAcreditarEditorial').trigger('reset');
             limpiarSellos();
             let cont=0;
             editorial.sellos.forEach(function(sello){
@@ -77,11 +79,13 @@ var numSellos=1;
             });
         });
     
-    $(document).on("submit", "#frm_editar_editorial",function(event){
+    $(document).off("submit","#frm_editar_editorial");
+    $(document).on("submit","#frm_editar_editorial",function(event){
+        
         event.preventDefault();
         
         let datosJSON=extraerEditarDatos();
-        
+        console.log(datosJSON);
         $.ajax({
             url: api_actualizar_editorial,
             async: true,
@@ -415,17 +419,16 @@ var numSellos=1;
     function extraerSellosEdit(){
         
         let contador=0;
-        let sellos='{';
+        let sellos={};
+        
         $('.edit_sello_editorial').each(function(){
             
             if($(this).val()!=''){
                 
-                sellos+='"'+contador+'":'+'"'+$(this).val()+'",';
+                sellos[contador]=$(this).val();
                 contador++;
             }
         });
-        sellos=sellos.slice(0,(sellos.length-1));
-        sellos+=',"'+(++contador)+'":"'+$('#edit_txt_sello_editorial_1').val()+'"}';
         
         return sellos;
     }
