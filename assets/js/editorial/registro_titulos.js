@@ -1,8 +1,7 @@
 'use strict';
-var base_url=window.location.protocol+'//'+window.location.host;
-var api_leer_datos_activacion=base_url+'/editorial/registro/leer_datos_activacion';
-var api_activar_editorial=base_url+'/editorial/registro/activar_editorial';
-var api_leer_datos_registro_titulo=base_url+'/editorial/registro/leer_datos_registro_titulo';
+var api_leer_datos_activacion=base_url+'editorial/registro/leer_datos_activacion';
+var api_activar_editorial=base_url+'editorial/registro/activar_editorial';
+var api_leer_datos_registro_titulo=base_url+'editorial/registro/leer_datos_registro_titulo';
 var paises;
 var estados;
 var municipios;
@@ -12,7 +11,6 @@ $(document).ready(function(){
     let editorial_estatus=$('#editorial_estatus').val();
     let editorial_folio=$('#editorial_folio').val();
     
-    console.log(editorial_folio);
     //Si la editorial está activa entonces.
     if(editorial_estatus==='1'){
         
@@ -25,11 +23,11 @@ $(document).ready(function(){
             success:function(response){
                 console.log(response);
                 sessionStorage.setItem('autores',JSON.stringify([]));
-                $.getScript(base_url+'/assets/js/registro_titulos/form_registro.js',function(){
+                $.getScript(base_url+'assets/js/editorial/registro_titulos/form_registro.js',function(){
                     form_registro.data=response;
                     form_registro.render();
                 });
-                $.getScript(base_url+'/assets/js/registro_titulos/form_crear_autor.js',function(){
+                $.getScript(base_url+'assets/js/editorial/registro_titulos/form_crear_autor.js',function(){
                     form_autor.data=response;
                     form_autor.render();
                 });
@@ -76,7 +74,11 @@ $(document).ready(function(){
             contentType:'application/x-www-form-urlencoded; charset=UTF-8',
             data:'folio='+editorial_folio,
             success:function(response){
-                console.log(response);
+                
+                let datos_activacion=JSON.stringify(response);
+                sessionStorage.clear();
+                sessionStorage.setItem('datos_activacion',datos_activacion);
+                
                 if(response.editorial.status==='success' 
                         && response.sellos_editoriales.status==='success'
                         && response.paises.status==='success'
@@ -86,7 +88,7 @@ $(document).ready(function(){
                     paises=response.paises;
                     estados=response.estados;
                     municipios=response.municipios;
-                    $.getScript(base_url+'/assets/js/registro_titulos/form_activacion_editorial.js',function(){
+                    $.getScript(base_url+'assets/js/editorial/registro_titulos/form_activacion_editorial.js',function(){
                         
                         form_activacion_editorial.data=response;
                         form_activacion_editorial.alertar('Antes de iniciar con el registro de titulos debe validar los siguientes datos');
@@ -174,7 +176,79 @@ $(document).ready(function(){
         }
         //----------------------------------------------
     }
+    
+    /*Agregar entidad federativa y municipio*/
+    $(document).on('focusout','#form_activacion_editorial_pais',(e)=>{
+        
+        let mostrar_entidades=JSON.parse(sessionStorage.getItem('mostrar_entidades'));
+        
+        if($('#form_activacion_editorial_pais').val()==='México'){
+            
+            if(mostrar_entidades===null || mostrar_entidades===false){
+                
+                let txt_entidad=$('#form_activacion_editorial_entidad_federativa');
+                let div_entidad=$(txt_entidad).parent();
+                let select_entidad=$('<select>',{'class':'custom-select','id':'form_activacion_editorial_entidad_federativa'});
+                let datos_activacion=JSON.parse(sessionStorage.getItem('datos_activacion'));
 
+                datos_activacion.estados.data.forEach(estado=>{
+
+                    let opt_estado=$('<option>',{'value':estado.est_estado});
+                    $(opt_estado).text(estado.est_estado);
+                    $(select_entidad).append(opt_estado);
+                });
+
+                $(div_entidad).append($(select_entidad));
+                $(txt_entidad).remove();
+                
+                sessionStorage.setItem('mostrar_entidades','true');
+            }
+        }
+        else{
+            
+            if(mostrar_entidades!==null || mostrar_entidades===true){
+                
+                let select_entidad=$('#form_activacion_editorial_entidad_federativa');
+                let select_del_mun=$('#form_activacion_editorial_del_mun');
+                let div_entidad=$(select_entidad).parent();
+                let div_del_mun=$(select_del_mun).parent();
+                let txt_entidad=$('<input>',{'type':'text','class':'form-control','id':'form_activacion_editorial_entidad_federativa'});
+                let txt_del_mun=$('<input>',{'type':'text','class':'form-control','id':'form_activacion_editorial_del_mun'});
+                
+                $(div_entidad).append($(txt_entidad));
+                $(div_del_mun).append($(txt_del_mun));
+                
+                $(select_entidad).remove();
+                $(select_del_mun).remove();
+                
+                sessionStorage.setItem('mostrar_entidades','false');
+            }
+        }
+        
+    });
+    
+    $(document).on('focusout','#form_activacion_editorial_entidad_federativa',(e)=>{
+        
+        let txt_del_mun=$('#form_activacion_editorial_del_mun');
+        let div_del_mun=$(txt_del_mun).parent();
+        let select_del_mun=$('<select>',{'class':'custom-select','id':'form_activacion_editorial_del_mun'});
+        let datos_activacion=JSON.parse(sessionStorage.getItem('datos_activacion'));
+        let estado=datos_activacion.estados.data.filter(estado=>estado.est_estado===$('#form_activacion_editorial_entidad_federativa').val());
+        
+        $(select_del_mun).children().remove();
+        datos_activacion.municipios.data.forEach(municipio=>{
+            
+            if(estado[0].est_id===municipio.est_id){
+                
+                let opt_municipio=$('<option>',{'value':municipio.mun_municipio});
+                $(opt_municipio).text(municipio.mun_municipio);
+                $(select_del_mun).append(opt_municipio);
+            }
+        });
+
+        $(div_del_mun).append($(select_del_mun));
+        $(txt_del_mun).remove();
+    });
 });
 
 

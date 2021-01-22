@@ -2,7 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Registro extends CI_Controller {
-	
+    
+    /**
+     *
+     * @var string Mantiene el permiso necesario para el módulo.
+     */
+    private $permiso='editorial';
+    
     private $editorial;
     
     /**
@@ -10,16 +16,31 @@ class Registro extends CI_Controller {
     *
     */
     public function __construct() {
+        
         parent::__construct();
-        //01 - Redireccionar en caso de no coincidir el valor del privilegio.
-        if($this->session->userdata('privilegio') != 3){
-            $this->controlacceso->reDireccionar($this->session->userdata('privilegio'));
-        }else{
+        
+        $this->load->model('editorial/Registro_m');
+        $this->datos_modulo=$this->Registro_m->leer_datos_registro();
+        $fecha_inicio_acceso=$this->datos_modulo['fecha_inicio_acceso'];
+        $fecha_fin_acceso=$this->datos_modulo['fecha_fin_acceso'];
+        
+        $control_acceso=$this->control_acceso;
+        
+        //Comprobar acceso al módulo.
+        if($control_acceso->comprobar_inicio_sesion() && $control_acceso->validar_acceso_modulo($this->permiso,$fecha_inicio_acceso,$fecha_fin_acceso)){
+            
+            
             //carga el modelo
-            $this->load->model('editorial/Registro_m');
+            $this->load->helper(['url','form','file']);
+            $this->load->library('pdf');
             $this->load->library('form_validation');
-            //Leer editorial.
-            $this->editorial=$this->Registro_m->leer_editorial($this->session->userdata['id']);
+            $this->load->library('Spreadsheet');
+            $user_id=$this->session->userdata('id');
+            $this->editorial=$this->Registro_m->leer_editorial($user_id);
+        }
+        else{
+            
+            $control_acceso->redireccionar($this->session->userdata('permiso'));
         }
     }
     // --------------------------------------------------------------
@@ -121,9 +142,37 @@ class Registro extends CI_Controller {
     }
     // --------------------------------------------------------------
     
+    /**
+    * Index.
+    * 
+    * Punto de acceso que muestra el GUI de manipulación de la funcionalidad
+    * del módulo.
+    */
     public function index(){
+        
+        $perfil=$this->session->userdata('id_perfil');
+        $modulo=3;
+        
+        //Leer las actividades del módulo.
+        $actividades=$this->Registro_m->leer_actividades_registro_titulo($perfil,$modulo);
+        $data['actividades']=$this->con_json($actividades);
 
+        $this->load->view('templates/Header');
+        $this->load->view('templates/main');      
+        $this->load->view('templates/Footer',$data); 
+    } 
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Con JSON.
+    * 
+    * Transforma a formato JSON las URLs de las actividades del módulo.
+    */
+    public function con_json($url){
+        $jsonencoded = json_encode($url,JSON_UNESCAPED_UNICODE);
+        return str_replace("\\/", "/", $jsonencoded);
     }
+    //--------------------------------------------------------------------------
     
     /**
     * Muestra el modulo de registro de titulos.

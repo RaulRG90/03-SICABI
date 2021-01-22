@@ -21,7 +21,7 @@ var form_activacion_editorial={
         let h2=$('<h2>',{'class':'text-center'});
         let p=$('<p>',{'class':'alert alert-danger text-center'});
         
-        $(h2).text('Completar datos de editorial');
+        $(h2).text('Datos de editorial');
         
         $(componente).append(h2);
                 
@@ -52,6 +52,20 @@ var form_activacion_editorial={
         let grupo_editorial=this.data.editorial.data[0].edi_grupoedit;
         grupo_editorial=this.group_input_create('grupo_editorial',grupo_editorial,'Grupo Editorial',[atributos_control]);
         
+        //Sellos Editoriales
+        atributos_control={'readonly':'readonly'};
+        let sellos_editoriales=this.data.sellos_editoriales.data;
+        let txt_sellos_editoriales='';
+        sellos_editoriales.forEach(sello=>{
+            
+            txt_sellos_editoriales+=sello.sel_sello+'\r\n';
+        });
+        sellos_editoriales=this.group_textarea_create('sellos_editoriales',txt_sellos_editoriales,'Sellos Editoriales',[atributos_control]);;
+        
+        //Edición de autor
+        atributos_control={'readonly':'readonly'};
+        let edicion_autor=this.group_input_create('edicion_autor','No','Edición de Autor',[atributos_control]);
+        
         //Colonia
         atributos_control={'required':'required'};
         let colonia=this.data.editorial.data[0].edi_colonia;
@@ -80,15 +94,15 @@ var form_activacion_editorial={
         //Pais
         atributos_control={'required':'required'};
         let pais=this.data.paises.data;
-        pais=this.group_select_create('pais',pais,'País',[atributos_control],'pai_id','pai_pais');
+        pais=this.group_select_create('pais',pais,'País',[atributos_control],'pai_pais','pai_pais');
         
         //Entidad Federativa
-        atributos_control={'required':'required'};
+        atributos_control={};
         let entidad_federativa='';
         entidad_federativa=this.group_input_create('entidad_federativa',entidad_federativa,'Entidad Federativa',[atributos_control]);
         
         //Delegación o Municipio
-        atributos_control={'required':'required'};
+        atributos_control={};
         let del_mun='';
         del_mun=this.group_input_create('del_mun',del_mun,'Delegación o Municipio',[atributos_control]);
         
@@ -126,6 +140,8 @@ var form_activacion_editorial={
         $(componente).append(razon_social);
         $(componente).append(rfc);
         $(componente).append(grupo_editorial);
+        $(componente).append(sellos_editoriales);
+        $(componente).append(edicion_autor);
         $(componente).append(colonia);
         $(componente).append(calle);
         $(componente).append(numero_exterior);
@@ -221,7 +237,7 @@ var form_activacion_editorial={
         let boton_salvar=$('<button>',{'class':'btn btn-primary','type':'submit','form':this.id_form});
         let form=this.form_create();
         
-        $(modal_title).text('Datos de la editorial '+this.data.editorial.edi_razonsocial);
+        $(modal_title).text('Datos de la editorial '+this.data.editorial.data[0].edi_razonsocial);
         $(boton_salvar).text('Guardar');
         $(modal_header).append(modal_title);
         $(modal_body).append(form);

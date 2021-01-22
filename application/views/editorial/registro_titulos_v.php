@@ -7,4 +7,5 @@
 
 <!--JavaScript-->
 <!--Módulo-->
-<script src="<?=base_url('assets/js/registro_titulos.js')?>" type="text/javascript"></script>
+<script type="text/javascript">var base_url='<?=base_url()?>';</script>
+<script src="<?=base_url('assets/js/editorial/registro_titulos.min.js')?>" type="text/javascript"></script>

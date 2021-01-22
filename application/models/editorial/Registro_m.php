@@ -20,6 +20,57 @@ class Registro_m extends CI_Model {
     // --------------------------------------------------------------
     
     /**
+    * Leer datos de registro de editoriales.
+    * 
+    * Lee los datos correspondientes a la acreditación de editoriales.
+    */
+    public function leer_datos_registro(){
+        
+        $query=$this->db->get_where('cat_modulo',['id_modulo'=>3]);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response['error']=error_array($error);
+        }
+        else{
+
+            $response=$query->result_array()[0];
+        }
+        
+        return $response;
+    }
+    //--------------------------------------------------------------------------
+    
+    /**
+    * Leer actividades de registro de títulos.
+    * 
+    * Lee las actividades de la acreditación de editoriales.
+    */
+    public function leer_actividades_registro_titulo($id_perfil,$id_modulo) {
+        
+        $this->db->select(
+                'lib_submodulos.id_submodulo,'.
+                'lib_submodulos.url_sub,'.
+                'lib_submodulos.id_acceso,'.
+                'lib_submodulos.nombre'
+            );
+        $this->db->from('lib_submodulos');
+        $this->db->join('acceso','acceso.id_acceso=lib_submodulos.id_acceso');
+        $this->db->where('acceso.id_perfil',$id_perfil);
+        $this->db->where('acceso.id_modulo',$id_modulo);
+        $this->db->order_by('lib_submodulos.id_submodulo','ASC');
+        $query=$this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
+    }
+    //--------------------------------------------------------------------------
+    
+    /**
     * Activa la editorial para el registro de titulos.
     *
     * @return array
@@ -34,12 +85,12 @@ class Registro_m extends CI_Model {
             'edi_calle'=>$datos_activacion['edi_calle'],
             'edi_numero'=>$datos_activacion['edi_numero'],
             'edi_cp'=>$datos_activacion['edi_cp'],
-            //'edi_ciudad'=>$datos_activacion['edi_ciudad'],
+            'edi_ciudad'=>$datos_activacion['edi_ciudad'],
             'edi_pais'=>$datos_activacion['edi_pais'],
             'edi_entidad_federativa'=>$datos_activacion['edi_entidad_federativa'],
             'edi_delegacion'=>$datos_activacion['edi_delegacion'],
             'edi_telefonos'=>$datos_activacion['edi_telefonos'],
-            'edi_telefonos'=>$datos_activacion['edi_email']
+            'edi_email'=>$datos_activacion['edi_email']
         ];
         
         $this->db->where('id',$datos_activacion['folio']);
@@ -163,7 +214,7 @@ class Registro_m extends CI_Model {
     */
     public function leer_municipios(){
         
-        $query=$this->db->get('cat_estados');
+        $query=$this->db->get('cat_municipios');
         if(empty($query)){
 
             $error=$this->db->error();
