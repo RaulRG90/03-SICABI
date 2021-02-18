@@ -17,9 +17,6 @@ $(document).ready(function(){
     crear_gui_acreditacion_editoriales();
     function crear_gui_acreditacion_editoriales(){
         
-        //leer_datos(api_leer_modulos,'modulos');
-        //leer_datos(api_leer_historial_cambios,'historial_cambios');
-        
         iniciar_contenedores();
         cargar_componentes();
         crear_encabezado();

@@ -5,7 +5,7 @@
     */
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Registro_m extends CI_Model {
+class Registro_titulos_m extends CI_Model {
     
     /**
     * Constructor del modelo.
@@ -236,13 +236,13 @@ class Registro_m extends CI_Model {
     * Lee los autores de la editorial.
     *
     */
-    public function leer_autores($usu_id){
+    public function leer_autores($edi_id){
         
         $this->db->select('aut_tipo','aut_nombre');
-        $this->db->from('usuarios');
-        $this->db->join('libros','usuarios.usu_id=libros.usu_id');
-        $this->db->join('lib_autores','libros.lib_id=lib_autores.lib_id');
-        $this->db->where('usuarios.usu_id',$usu_id);
+        $this->db->from('editoriales');
+        $this->db->join('libros','editoriales.id=libros.edi_id');
+        $this->db->join('lib_autores','libros.id=lib_autores.lib_id');
+        $this->db->where('editoriales.id',$edi_id);
         $query=$this->db->get();
         if(empty($query)){
 
@@ -254,6 +254,82 @@ class Registro_m extends CI_Model {
             
             $response['status']='success';
             $response['message']='Autores Leidos';
+            $response['data']=$query->result_array();
+        }
+        
+        return $response;
+    }
+    // --------------------------------------------------------------
+    
+    
+    /**
+    * Lee los autores de la editorial.
+    *
+    */
+    public function registrar_titulo($datos_registro){
+        
+        $data=[
+            'edi_id'=>$datos_registro['edi_id'],
+            'titulo'=>$datos_registro['titulo'],
+            'titulo_original'=>$datos_registro['titulo_original'],
+            'material'=>$datos_registro['material'],
+            'indice_titulo'=>$datos_registro['indice_titulo'],
+            'material_lengua_indigena'=>$datos_registro['material_lengua_indigena'],
+            'sello_id'=>$datos_registro['sello_id'],
+            'edicion'=>$datos_registro['edicion'],
+            'anio'=>$datos_registro['anio'],
+            'tiraje'=>$datos_registro['tiraje'],
+            'resenia'=>$datos_registro['resenia'],
+            'isbn'=>$datos_registro['isbn'],
+            'paginas_con_folio'=>$datos_registro['paginas_con_folio'],
+            'pais'=>$datos_registro['pais'],
+            'ciudad'=>$datos_registro['ciudad'],
+            'reconocimiento_libro'=>$datos_registro['reconocimiento_libro'],
+            'reconocimiento_autor'=>$datos_registro['reconocimiento_autor'],
+            'reconocimiento_ilustrador'=>$datos_registro['reconocimiento_ilustrador'],
+            'nivel'=>$datos_registro['nivel'],
+            'genero'=>$datos_registro['genero'],
+            'categoria'=>$datos_registro['categoria'],
+            'precio_publico'=>$datos_registro['precio_publico'],
+            'disponibilidad'=>$datos_registro['disponibilidad'],
+            'numero_tipo_papel'=>$datos_registro['numero_tipo_papel'],
+        ];
+        
+        $query=$this->db->insert('libros',$data);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response=['error'=>error_array($error)];
+        }
+        else{
+            
+            $response['message']='Título Registrado';
+            $response['data']=$query;
+        }
+        
+        return $response;
+    }
+    // --------------------------------------------------------------
+    
+    /**
+    * Lee los autores de la editorial.
+    *
+    */
+    public function leer_titulos_registrados($edi_id){
+        
+        $query=$this->db->get_where('libros',['edi_id'=>$edi_id]);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response['status']='error';
+            $response['error']=error_array($error);
+        }
+        else{
+            
+            $response['status']='success';
+            $response['message']='Libros Leidos';
             $response['data']=$query->result_array();
         }
         

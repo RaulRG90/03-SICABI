@@ -22,8 +22,6 @@ $(document).ready(function(){
     sessionStorage.clear();
     crear_gui_acreditacion_editoriales();
     function crear_gui_acreditacion_editoriales(){
-        
-        //leer_datos(api_leer_totales_acreditacion,'totales');
 
         iniciar_contenedores();
         cargar_componentes();

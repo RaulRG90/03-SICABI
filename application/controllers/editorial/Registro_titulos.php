@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Registro extends CI_Controller {
+class Registro_titulos extends CI_Controller {
     
     /**
      *
@@ -19,8 +19,9 @@ class Registro extends CI_Controller {
         
         parent::__construct();
         
-        $this->load->model('editorial/Registro_m');
-        $this->datos_modulo=$this->Registro_m->leer_datos_registro();
+        $this->load->model('editorial/Registro_titulos_m');
+        $db=$this->Registro_titulos_m;
+        $this->datos_modulo=$db->leer_datos_registro();
         $fecha_inicio_acceso=$this->datos_modulo['fecha_inicio_acceso'];
         $fecha_fin_acceso=$this->datos_modulo['fecha_fin_acceso'];
         
@@ -36,7 +37,7 @@ class Registro extends CI_Controller {
             $this->load->library('form_validation');
             $this->load->library('Spreadsheet');
             $user_id=$this->session->userdata('id');
-            $this->editorial=$this->Registro_m->leer_editorial($user_id);
+            $this->editorial=$db->leer_editorial($user_id);
         }
         else{
             
@@ -136,6 +137,130 @@ class Registro extends CI_Controller {
                     ],
                 ];
                 break;
+            case 'registrar_titulo':
+                $rules=[
+                    [
+                        'field'=>'edi_id',
+                        'label'=>'Id de Editorial',
+                        'rules'=>['required','trim','numeric','greater_than_equal_to[1000]'],
+                    ],
+                    [
+                        'field'=>'titulo',
+                        'label'=>'Título del Libro',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'titulo_original',
+                        'label'=>'Título Original',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'material',
+                        'label'=>'Material',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'indice_titulo',
+                        'label'=>'Indice del Título',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'material_lengua_indigena',
+                        'label'=>'Material en Lengua Indigena',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'sello_id',
+                        'label'=>'Sello Editorial',
+                        'rules'=>['numeric'],
+                    ],
+                    [
+                        'field'=>'edicion',
+                        'label'=>'Edición',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'anio',
+                        'label'=>'Año',
+                        'rules'=>['required','numeric'],
+                    ],
+                    [
+                        'field'=>'tiraje',
+                        'label'=>'Tiraje',
+                        'rules'=>['required','numeric'],
+                    ],
+                    [
+                        'field'=>'resenia',
+                        'label'=>'Reseña',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'isbn',
+                        'label'=>'ISBN',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'paginas_con_folio',
+                        'label'=>'Páginas con folio',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'pais',
+                        'label'=>'Pais',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'ciudad',
+                        'label'=>'Pais',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'reconocimiento_libro',
+                        'label'=>'Reconocimiento del libro',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'reconocimiento_autor',
+                        'label'=>'Reconocimiento del Autor',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'reconocimiento_ilustrador',
+                        'label'=>'Reconocimiento del Ilustrador',
+                        'rules'=>['trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'nivel',
+                        'label'=>'Nivel',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'genero',
+                        'label'=>'Género',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'categoria',
+                        'label'=>'Categoría',
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'precio_publico',
+                        'label'=>'Precio al Público',
+                        'rules'=>['required','numeric'],
+                    ],
+                    [
+                        'field'=>'disponibilidad',
+                        'label'=>'Disponibilidad',
+                        'rules'=>['required','numeric'],
+                    ],
+                    [
+                        'field'=>'numero_tipo_papel',
+                        'label'=>'Número de tipo de papel',
+                        'rules'=>['required','numeric'],
+                    ],
+                ];
+                break;
         }
         
         return $rules;
@@ -150,11 +275,12 @@ class Registro extends CI_Controller {
     */
     public function index(){
         
+        $db=$this->Registro_titulos_m;
         $perfil=$this->session->userdata('id_perfil');
         $modulo=3;
         
         //Leer las actividades del módulo.
-        $actividades=$this->Registro_m->leer_actividades_registro_titulo($perfil,$modulo);
+        $actividades=$db->leer_actividades_registro_titulo($perfil,$modulo);
         $data['actividades']=$this->con_json($actividades);
 
         $this->load->view('templates/Header');
@@ -178,7 +304,7 @@ class Registro extends CI_Controller {
     * Muestra el modulo de registro de titulos.
     *
     */
-    public function registro_titulos(){
+    public function formulario_registro(){
         
         $data['editorial_folio']=$this->editorial['data'][0]['id'];
         //Leer si la editorial está activa.
@@ -199,9 +325,9 @@ class Registro extends CI_Controller {
     * Lee los datos para el formulario de activación.
     *
     */
-    public function leer_datos_activacion(){
+    public function datos_activacion_editorial(){
         
-        $db=$this->Registro_m;
+        $db=$this->Registro_titulos_m;
         
         //Validar Datos y sanitizar.
         $reglas=$this->reglas_validacion('leer_datos_activacion');
@@ -225,9 +351,9 @@ class Registro extends CI_Controller {
     * Lee los datos para el registro de títulos.
     *
     */
-    public function leer_datos_registro_titulo(){
+    public function datos_registro(){
         
-        $db=$this->Registro_m;
+        $db=$this->Registro_titulos_m;
         
         //Validar Datos y sanitizar.
         $reglas=$this->reglas_validacion('leer_datos_registro_titulo');
@@ -253,7 +379,7 @@ class Registro extends CI_Controller {
     */
     public function leer_paises(){
         
-        $db=$this->Registro_m;
+        $db=$this->Registro_titulos_m;
         
         $paises=$db->leer_paises();
         
@@ -303,7 +429,7 @@ class Registro extends CI_Controller {
     */
     public function activar_editorial(){
         
-        $db=$this->Registro_m;
+        $db=$this->Registro_titulos_m;
         
         //Validar Datos y sanitizar.
         $reglas=$this->reglas_validacion('activar_editorial');
@@ -340,5 +466,64 @@ class Registro extends CI_Controller {
         echo json_encode($response);
     }
     // --------------------------------------------------------------
+    
+    public function titulos_registrados($edi_id){
+        
+        $db=$this->Registro_titulos_m;
+        
+        $titulos=$db->leer_titulos_registrados($edi_id);
+        
+        echo json_encode($titulos);
+    }
+    
+    public function registrar_titulo(){
+        
+        $db=$this->Registro_titulos_m;
+        
+        //Validar Datos y sanitizar.
+        $reglas=$this->reglas_validacion('registrar_titulo');
+        $this->form_validation->set_rules($reglas);
+        
+        if($this->form_validation->run()==TRUE){
+            
+            $datos_registro['edi_id']=set_value('edi_id');
+            $datos_registro['titulo']=set_value('titulo');
+            $datos_registro['titulo_original']=set_value('titulo_original');
+            $datos_registro['material']=set_value('material');
+            $datos_registro['indice_titulo']=set_value('indice_titulo');
+            $datos_registro['material_lengua_indigena']=set_value('material_lengua_indigena');
+            $datos_registro['sello_id']=set_value('sello_id');
+            $datos_registro['edicion']=set_value('edicion');
+            $datos_registro['anio']=set_value('anio');
+            $datos_registro['tiraje']=set_value('tiraje');
+            $datos_registro['resenia']=set_value('resenia');
+            $datos_registro['isbn']=set_value('isbn');
+            $datos_registro['paginas_con_folio']=set_value('paginas_con_folio');
+            $datos_registro['pais']=set_value('pais');
+            $datos_registro['ciudad']=set_value('ciudad');
+            $datos_registro['reconocimiento_libro']=set_value('reconocimiento_libro');
+            $datos_registro['reconocimiento_autor']=set_value('reconocimiento_autor');
+            $datos_registro['reconocimiento_ilustrador']=set_value('reconocimiento_ilustrador');
+            $datos_registro['nivel']=set_value('nivel');
+            $datos_registro['genero']=set_value('genero');
+            $datos_registro['categoria']=set_value('categoria');
+            $datos_registro['precio_publico']=set_value('precio_publico');
+            $datos_registro['disponibilidad']=set_value('disponibilidad');
+            $datos_registro['numero_tipo_papel']=set_value('numero_tipo_papel');
+            
+            
+            $response=$db->registrar_titulo($datos_registro);
+        }
+        else{
+            $response=[
+                'error'=>[
+                    'code'=>'v001',
+                    'message'=>validation_errors()
+                ]
+            ];
+        }
+        
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
+    }
 }
 
