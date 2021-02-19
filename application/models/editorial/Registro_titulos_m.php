@@ -236,14 +236,9 @@ class Registro_titulos_m extends CI_Model {
     * Lee los autores de la editorial.
     *
     */
-    public function leer_autores($edi_id){
+    public function leer_autores(){
         
-        $this->db->select('aut_tipo','aut_nombre');
-        $this->db->from('editoriales');
-        $this->db->join('libros','editoriales.id=libros.edi_id');
-        $this->db->join('lib_autores','libros.id=lib_autores.lib_id');
-        $this->db->where('editoriales.id',$edi_id);
-        $query=$this->db->get();
+        $query=$this->db->get('lib_autores');
         if(empty($query)){
 
             $error=$this->db->error();
@@ -337,4 +332,39 @@ class Registro_titulos_m extends CI_Model {
     }
     // --------------------------------------------------------------
     
+    public function registrar_autor($datos_autor){
+        
+        $query=$this->db->insert('lib_autores',$datos_autor);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response=['error'=>error_array($error)];
+        }
+        else{
+            
+            $response['message']='Autor Registrado';
+            $response['data']=$query;
+        }
+        
+        return $response;
+    }
+    
+    public function eliminar_autor($datos_autor){
+        
+        $query=$this->db->delete('lib_autores', ['aut_nombre' => $datos_autor['aut_nombre']]);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response=['error'=>error_array($error)];
+        }
+        else{
+            
+            $response['message']='Autor Eliminado';
+            $response['data']=$query;
+        }
+        
+        return $response;
+    }
 }

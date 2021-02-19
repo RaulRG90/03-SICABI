@@ -5,6 +5,9 @@ var api_leer_datos_activacion=base_url+'editorial/registro_titulos/datos_activac
 var api_activar_editorial=base_url+'editorial/registro_titulos/activar_editorial';
 var api_leer_datos_registro_titulo=base_url+'editorial/registro_titulos/datos_registro/';
 var api_leer_titulos_registrados=base_url+'editorial/registro_titulos/titulos_registrados/';
+var api_crear_autor=base_url+'editorial/registro_titulos/crear_autor';
+var api_eliminar_autor=base_url+'editorial/registro_titulos/eliminar_autor';
+var api_registrar_titulo=base_url+'editorial/registro_titulos/registrar_titulo';
 
 var componente_cabecera;
 var componente_btn_registrar_titulo;
@@ -121,19 +124,178 @@ $(document).ready(function(){
     
     $('#btn_registrar_titulo').on('click',(e)=>{
         
-        $('#section_titulos_registrados').children().hide();
-        componente_form_registro_titulos.data=datos.registro;
-        $('#seccion_frm_registro').append(componente_form_registro_titulos.render());
+        if($('#seccion_frm_registro').children().length===0){
+            
+            $('#section_titulos_registrados').children().hide();
         
-        componente_form_autor.data=datos.registro;
-        $('#modales').append(componente_form_autor.render());
+            componente_form_registro_titulos.data=datos.registro;
+            $('#seccion_frm_registro').append(componente_form_registro_titulos.render());
+
+            componente_form_autor.data=datos.registro;
+            $('#modales').append(componente_form_autor.render());
+
+            $('#eliminar_autor').on('click',e=>{
+
+                let autor=$(e.target).attr('autor');
+                let datosJSON={
+                    'aut_nombre':autor
+                };
+
+                if(autor!='false'){
+
+                    $.ajax({
+                        async: true,
+                        type: "POST",
+                        dataType: "JSON",
+                        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                        url: api_eliminar_autor,
+                        data: datosJSON,
+                        success: function(respuesta){
+
+                            if(respuesta.error){
+                                swal('Error!',respuesta.error.message,'error');
+                            }
+                            else{
+                                swal('Correcto!',respuesta.message,'success');
+                                $('#form_registro_autor').children(`option[value='${autor}']`).remove();
+                                console.log($('#form_registro_autor').children(`option[value='${autor}']`));
+                            }   
+                        },
+                        error: function(datos){
+
+                            swal('Error!','Error desconocido, comuniquese con el administrador','error');
+                        }
+                    });
+                }
+                else{
+
+                    swal('Error!','El campo nombre del autor es obligatorio','error');
+                }
+            });
+
+            $('#form_autores').on('submit',e=>{
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                if(e.target.checkValidity()===false){
+                    this.classList.add('was-validated');
+                }
+                else{
+
+                    let datosJSON={
+                        'aut_tipo':$('#form_autores_tipo_autor').val(),
+                        'aut_nombre':$('#form_autores_nombre').val(),
+                        'aut_pais':$('#form_autores_pais_origen').val()
+                    };
+
+                    $.ajax({
+                    async: true,
+                    type: "POST",
+                    dataType: "JSON",
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                    url: api_crear_autor,
+                    data: datosJSON,
+                    success: function(respuesta){
+
+                        let tipo=$('#form_autores_tipo_autor').val();
+                        let nombre=$('#form_autores_nombre').val();
+
+                        if(respuesta.error){
+                            swal('Error!',respuesta.error.message,'error');
+                        }
+                        else{
+
+                            swal('Correcto!',respuesta.message,'success');
+                            $('#form_registro_autor').append($('<option>',{'value':nombre}).text(`${tipo} | ${nombre}`));
+                        }   
+                    },
+                    error: function(datos){
+
+                        swal('Error!','Error desconocido, comuniquese con el administrador','error');
+                    }
+                });
+            }        
+            });
+
+            $('#form_registro_autor').on('change',e=>{
+
+                $('#eliminar_autor').attr('autor',$(e.target).val());
+            });
+            
+            $('#form_registro').on('submit',e=>{
+        
+                e.preventDefault();
+                e.stopPropagation();
+
+                if(e.target.checkValidity()===false){
+
+                    $(e.target).addClass('was-validated');
+                }
+                else{
+
+                    let datosJSON={
+                        'edi_id':datos.editorial_folio,
+                        'titulo':$('#form_registro_titulo').val(),
+                        'titulo_original':$('#form_registro_titulo_original').val(),
+                        'material':$('#form_registro_material').val(),
+                        'autor':$('#form_registro_autor').val(),
+                        'indice_titulo':$('#form_registro_indice_titulo').val(),
+                        'material_lengua_indigena':$('#form_registro_material_lengua_indigena').val(),
+                        'sello_id':$('#form_registro_sello').val(),
+                        'edicion':$('#form_registro_edicion').val(),
+                        'anio':$('#form_registro_anio').val(),
+                        'tiraje':$('#form_registro_tiraje').val(),
+                        'resenia':$('#form_registro_resenia').val(),
+                        'isbn':$('#form_registro_isbn').val(),
+                        'paginas_con_folio':$('#form_registro_paginas_con_folio').val(),
+                        'pais':$('#form_registro_pais').val(),
+                        'ciudad':$('#form_registro_ciudad').val(),
+                        'reconocimiento_libro':$('#form_registro_reconocimiento_libro').val(),
+                        'reconocimiento_autor':$('#form_registro_reconocimiento_autor').val(),
+                        'reconocimiento_ilustrador':$('#form_registro_reconocimiento_ilustrador').val(),
+                        'nivel':$('#form_registro_nivel').val(),
+                        'genero':$('#form_registro_genero').val(),
+                        'categoria':$('#form_registro_categoria').val(),
+                        'precio_publico':$('#form_registro_precio_publico').val(),
+                        'disponibilidad':$('#form_registro_disponibilidad').val(),
+                        'numero_tipo_papel':$('#form_registro_tipo_papel').val()
+                    };
+
+                    $.ajax({
+                    async: true,
+                    type: "POST",
+                    dataType: "JSON",
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                    url: api_registrar_titulo,
+                    data: datosJSON,
+                    success: function(respuesta){
+
+                        if(respuesta.error){
+                            swal('Error!',respuesta.error.message,'error');
+                        }
+                        else{
+
+                            swal('Correcto!',respuesta.message,'success');
+                            $('#section_titulos_registrados').children().show();
+                            $('#seccion_frm_registro').children().remove();
+                            
+                            let tabla=$('#tbl_titulos_registrados').DataTable();
+                            console.log(tabla);
+                            tabla.ajax.reload(null,false);
+                        }   
+                    },
+                    error: function(datos){
+
+                        swal('Error!','Error desconocido, comuniquese con el administrador','error');
+                    }
+                });
+            }
+            });
+        }
+        
     });
     
-    $('#eliminar_autor').on('click',(e)=>{
-        
-        e.preventDefault();
-        window.alert('eliminado');
-    });
     //--------------------------------------------------------------------------
     
     /* **************************************** *
@@ -204,48 +366,7 @@ $(document).ready(function(){
 //            }
 //        });
 //    }
-//    else{
-//        
-//        /**
-//         * Leer datos de activación.
-//         */
-//        $.ajax({
-//            url:api_leer_datos_activacion,
-//            type:'POST',
-//            dataType:'JSON',
-//            contentType:'application/x-www-form-urlencoded; charset=UTF-8',
-//            data:'folio='+editorial_folio,
-//            success:function(response){
-//                
-//                let datos_activacion=JSON.stringify(response);
-//                sessionStorage.clear();
-//                sessionStorage.setItem('datos_activacion',datos_activacion);
-//                
-//                if(response.editorial.status==='success' 
-//                        && response.sellos_editoriales.status==='success'
-//                        && response.paises.status==='success'
-//                        && response.estados.status==='success'
-//                        && response.municipios.status==='success'){
-//                    
-//                    paises=response.paises;
-//                    estados=response.estados;
-//                    municipios=response.municipios;
-//                    $.getScript(base_url+'assets/js/editorial/registro_titulos/form_activacion_editorial.js',function(){
-//                        
-//                        form_activacion_editorial.data=response;
-//                        form_activacion_editorial.alertar('Antes de iniciar con el registro de titulos debe validar los siguientes datos');
-//                        form_activacion_editorial.render();
-//                   });
-//                }
-//            },
-//            error:function(error){
-//                
-//                console.log(error,'error');
-//                document.write(error.responseText);
-//            }
-//        });
-//        //----------------------------------------------
-//  }      
+
     /**
      * Solicitar activación.
      */
@@ -391,5 +512,3 @@ $(document).ready(function(){
         $(txt_del_mun).remove();
     });
 });
-
-

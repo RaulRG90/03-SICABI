@@ -172,7 +172,7 @@ class Registro_titulos extends CI_Controller {
                     [
                         'field'=>'sello_id',
                         'label'=>'Sello Editorial',
-                        'rules'=>['numeric'],
+                        'rules'=>['required','trim','alpha_numeric_spaces'],
                     ],
                     [
                         'field'=>'edicion',
@@ -259,6 +259,34 @@ class Registro_titulos extends CI_Controller {
                         'label'=>'Número de tipo de papel',
                         'rules'=>['required','numeric'],
                     ],
+                ];
+                break;
+            case 'registrar_autor':
+                $rules=[
+                    [
+                        'field'=>'aut_nombre',
+                        'label'=>'Nombre del autor',
+                        'rules'=>['required','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'aut_tipo',
+                        'label'=>'Tipo del autor',
+                        'rules'=>['required','alpha_numeric_spaces'],
+                    ],
+                    [
+                        'field'=>'aut_pais',
+                        'label'=>'Pais del autor',
+                        'rules'=>['required','alpha_numeric_spaces'],
+                    ]
+                ];
+                break;
+            case 'eliminar_autor':
+                $rules=[
+                    [
+                        'field'=>'aut_nombre',
+                        'label'=>'Nombre del autor',
+                        'rules'=>['required','alpha_numeric_spaces'],
+                    ]
                 ];
                 break;
         }
@@ -365,7 +393,7 @@ class Registro_titulos extends CI_Controller {
             $id_editorial=$response['editorial']['data'][0]['id'];
             $response['sellos_editoriales']=$db->leer_sellos_editoriales($id_editorial);
             $response['paises']=$db->leer_paises();
-            $response['autores']=$db->leer_autores($id_editorial);
+            $response['autores']=$db->leer_autores();
         }
 
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
@@ -471,9 +499,9 @@ class Registro_titulos extends CI_Controller {
         
         $db=$this->Registro_titulos_m;
         
-        $titulos=$db->leer_titulos_registrados($edi_id);
+        $titulos=$db->leer_titulos_registrados($edi_id)['data'];
         
-        echo json_encode($titulos);
+        echo json_encode($titulos,JSON_UNESCAPED_UNICODE);
     }
     
     public function registrar_titulo(){
@@ -525,5 +553,58 @@ class Registro_titulos extends CI_Controller {
         
         echo json_encode($response,JSON_UNESCAPED_UNICODE);
     }
+    
+    public function crear_autor(){
+        
+        $db=$this->Registro_titulos_m;
+        
+        //Validar Datos y sanitizar.
+        $reglas=$this->reglas_validacion('registrar_autor');
+        $this->form_validation->set_rules($reglas);
+        
+        if($this->form_validation->run()==TRUE){
+            
+            $datos_autor['aut_nombre']=set_value('aut_nombre');
+            $datos_autor['aut_tipo']=set_value('aut_tipo');
+            $datos_autor['aut_pais']=set_value('aut_pais');
+            
+            $response=$db->registrar_autor($datos_autor);
+        }
+        else{
+            $response=[
+                'error'=>[
+                    'code'=>'v001',
+                    'message'=>validation_errors()
+                ]
+            ];
+        }
+        
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
+    }
+    
+    public function eliminar_autor(){
+        
+        $db=$this->Registro_titulos_m;
+        
+        //Validar Datos y sanitizar.
+        $reglas=$this->reglas_validacion('eliminar_autor');
+        $this->form_validation->set_rules($reglas);
+        
+        if($this->form_validation->run()==TRUE){
+            
+            $datos_autor['aut_nombre']=set_value('aut_nombre');
+            
+            $response=$db->eliminar_autor($datos_autor);
+        }
+        else{
+            $response=[
+                'error'=>[
+                    'code'=>'v001',
+                    'message'=>validation_errors()
+                ]
+            ];
+        }
+        
+        echo json_encode($response,JSON_UNESCAPED_UNICODE);
+    }
 }
-

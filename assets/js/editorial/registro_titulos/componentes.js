@@ -82,13 +82,13 @@ var tabla_titulos_registrados={
                 'dataSrc':''
             },
             'columns':[
-                {'data':'id','title':'Folio'},
+                {'data':'edi_id','title':'Folio'},
                 {'data':'titulo','title':'Título'},
                 {'data':'id','title':'Editar','render':data=>{
                         let btn_editar_titulo=
                                 `<button 
                                     id="btn_editar_titulo_${data}" 
-                                    class="btn btn-secundary" 
+                                    class="btn btn-md btn-outline-info m-0 px-3 py-2 z-depth-0 waves-effect" 
                                     id_titulo="${data}">`+
                                     
                                     `<i class="fa fa-edit"></i>`+
@@ -100,7 +100,7 @@ var tabla_titulos_registrados={
                         let btn_descarga_acuse=
                                 `<a
                                     id="btn_descarga_acuse_${data}"
-                                    class="btn btn-md btn-outline-success m-0 px-3 py-2 z-depth-0 waves-effect"
+                                    class="btn btn-md btn-outline-secondary m-0 px-3 py-2 z-depth-0 waves-effect"
                                     href="${base_url}editorial/registro_titulos/crear_acuse/${data}"
                                     target="_blank">`+
                                     
@@ -152,8 +152,7 @@ var form_registro_titulos={
             'atributos':null,
             'val':['antologia','ilustrado'],
             'etiqueta':'El material es:',
-            'etiqueta_checkbox':['Antología:','Ilustrado:'],
-            'placeholder':'Escribe el título en lengua original del libro'
+            'etiqueta_checkbox':['Antología:','Ilustrado:']
         },
         'autor':{
             'tipo':'btn_crear_seleccion',
@@ -165,7 +164,7 @@ var form_registro_titulos={
             'placeholder':'Escribe el título en lengua original del libro',
             'modal':'mdl_agregar_autor',
             'id':'aut_nombre',
-            'textos':['aut_nombre','aut_tipo'],
+            'textos':['aut_tipo','aut_nombre'],
             'tabla':'autores'
         },
         'indice_titulo':{
@@ -180,7 +179,7 @@ var form_registro_titulos={
             'val':'',
             'etiqueta':'Material en lengua indigena:'
         },
-        'sello_id':{
+        'sello':{
             'tipo':'seleccion',
             'atributos':{
                 'required':'required'
@@ -244,12 +243,15 @@ var form_registro_titulos={
             'etiqueta':'Páginas con folio:'
         },
         'pais':{
-            'tipo':'text',
+            'tipo':'seleccion',
             'atributos':{
                 'required':'required'
             },
             'val':'',
-            'etiqueta':'País:'
+            'etiqueta':'País:',
+            'id':'pai_pais',
+            'textos':['','pai_pais'],
+            'tabla':'paises'
         },
         'ciudad':{
             'tipo':'text',
@@ -276,13 +278,61 @@ var form_registro_titulos={
             'atributos':null,
             'val':'',
             'etiqueta':'Reconocimiento para el ilustrador:'
-        }/*,
-        'nivel':'',
-        'genero':'',
-        'categoria':'',
-        'precio_publico':'',
-        'disponibilidad':'',
-        'numero_tipo_papel':''*/
+        },
+        'nivel':{
+            'tipo':'text',
+            'atributos':{
+                'disabled':'disabled',
+                'required':'required'
+            },
+            'val':'1pre',
+            'etiqueta':'Nivel:'
+        },
+        'genero':{
+            'tipo':'text',
+            'atributos':{
+                'disabled':'disabled',
+                'required':'required'
+            },
+            'val':'Texto literario',
+            'etiqueta':'Genero:'
+        },
+        'categoria':{
+            'tipo':'text',
+            'atributos':{
+                'disabled':'disabled',
+                'required':'required'
+            },
+            'val':'El cuerpo',
+            'etiqueta':'Categoría:'
+        },
+        'precio_publico':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'1pre',
+            'etiqueta':'Precio al público:'
+        },
+        'disponibilidad':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'1pre',
+            'etiqueta':'Disponibilidad:'
+        },
+        'tipo_papel':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'1pre',
+            'etiqueta':'Numero de tipos de papel (interiores):',
+            'id':'tipo',
+            'textos':['','tipo'],
+            'tabla':'tipos_papel'
+        }
     },
     'id_form':'form_registro',
     'crear_cabecera':function(seccion){
@@ -308,6 +358,18 @@ var form_registro_titulos={
     },
     'crear_datos_bibliograficos':function(){
         
+        this.data['tipos_papel']={'data':[
+            
+            {'tipo':1},
+            {'tipo':2},
+            {'tipo':3},
+            {'tipo':4},
+            {'tipo':5},
+            {'tipo':6},
+            {'tipo':7},
+            {'tipo':8}
+        ]};
+            
         let componente=$('<section>',{'id':this.id_form+'_datos_bibliograficos','class':'mx-10'});
         
         $.each(this.datos_bibliograficos,(key,dato)=>{
@@ -330,9 +392,12 @@ var form_registro_titulos={
         
         if(dato.tipo==='checkbox'){
             
-            let form_check=this.crear_input_checkbox(dato);
             $(group).addClass('border');
-            control_input=form_check;
+            $.each(dato['etiqueta_checkbox'],(key,etiqueta)=>{
+                
+                let form_check=this.crear_input_checkbox(dato,key,etiqueta);
+                $(group).append(form_check);
+            });
         }
         else if(dato.tipo==='textarea'){
             
@@ -352,14 +417,19 @@ var form_registro_titulos={
         }
         else{
             
-            control_input=$('<input>',{'class':'form-control','type':dato.tipo,'id':`id_frm_${nombre_control}`});
+            control_input=$('<input>',{
+                'class':'form-control',
+                'type':dato.tipo,
+                'id':`form_registro_${nombre_control}`,
+                'value': dato.val
+            });
         }
         
         if(hay_atributos){
-            console.log(hay_atributos);
+            
             $.each(dato.atributos,(atributo)=>{
-
-                $(control_input).attr(atributo);
+                
+                $(control_input).attr(atributo,atributo);
             });
 
             if(dato.atributos.required!==null){
@@ -379,26 +449,23 @@ var form_registro_titulos={
         
         return group;
     },
-    'crear_input_checkbox':function(dato,group){
-        
-        $.each(dato['etiqueta_checkbox'],(key,etiqueta)=>{
-                
-                let form_check=$('<div>',{'class':'form-check form-check-inline mx-auto'});
-                let id_check=`${form_registro_titulos.id_form}_check_${dato.val[key]}`;
-                let control=$('<input>',
-                    {
-                        'class':'form-check-input',
-                        'type':dato.tipo,
-                        'value':dato.val[key],
-                        'id':id_check
-                    });
-
-                let label=$('<label>',{'for':id_check,'class':'form-check-label'}).text(etiqueta);
-
-                $(form_check).append(control).append(label);
-                
-                return form_check;
+    'crear_input_checkbox':function(dato,key,etiqueta){
+            
+        let form_check=$('<div>',{'class':'form-check form-check-inline mx-auto'});
+        let id_check=`${form_registro_titulos.id_form}_check_${dato.val[key]}`;
+        let control=$('<input>',
+            {
+                'class':'form-check-input',
+                'type':dato.tipo,
+                'value':dato.val[key],
+                'id':id_check
             });
+
+        let label=$('<label>',{'for':id_check,'class':'form-check-label'}).text(etiqueta);
+
+        $(form_check).append(control).append(label);
+        
+        return form_check;
     },
     'crear_input_textarea':function(nombre_control){
         
@@ -420,7 +487,11 @@ var form_registro_titulos={
             'aria-haspopup':"true"
         }).text(`${nombre_btn}:`);
         let a_agregar=$('<a>',{'id':`agregar_${nombre_control}`,'class':'dropdown-item','data-toggle':'modal','data-target':'#modal_form_autores'}).text('Agregar');
-        let a_eliminar=$('<a>',{'id':`eliminar_${nombre_control}`,'class':'dropdown-item'}).text('Eliminar');
+        let a_eliminar=$('<button>',{
+            'type':'button',
+            'id':`eliminar_${nombre_control}`,
+            'class':'dropdown-item'
+        }).text('Eliminar');
         let menu=$('<div>',{'class':'dropdown-menu'}).append(a_agregar).append(a_eliminar);
 
         let select=this.crear_input_seleccion(nombre_control,tabla,id,textos);
@@ -434,6 +505,7 @@ var form_registro_titulos={
         
         let select=$('<select>',{'class':'custom-select','id':`${this.id_form}_${nombre_control}`});
         
+        $(select).append($('<option>',{'value':false}).text(`Selecciona un ${nombre_control}`));
         this.data[tabla].data.forEach(function(control){
 
             let option=$('<option>',{'value':control[id]});
@@ -443,110 +515,17 @@ var form_registro_titulos={
         
         return select;
     },
-    'card_create':function(texto,target){
-        
-        let componente=$('<div>',{'class':'card'});
-        let header=$('<div>',{'class':'card-header','id':'header_'+target});
-        let h2=$('<h2>',{'class':'mb-0'});
-        let button=$('<button>',{
-            'class':'btn btn-link btn-block text-left',
-            'type':'button',
-            'data-toggle':'collapse',
-            'data-target':'#'+target,
-            'aria-expanded':'false',
-            'aria-controls':target
-        });
-        
-        $(button).text(texto);
-        $(h2).append(button);
-        $(header).append(h2);
-        $(componente).append(header);
-        
-        return componente;
-        
-    },
-    'input_custom_btn_create':function(nombre_control,target){
-        
-        let componente=$('<div>',{'class':'input-group mb-3'});
-        let group_prepend=$('<div>',{'class':'input-group-prepend'});
-        let button=$('<button>',{
-            'class':'btn btn-outline-secondary',
-            'type':'button',
-            'id':this.id_form+'_btn_agregar_autor',
-            'data-toggle':'modal',
-            'data-target':'#'+target
-        });
-        let select=$('<select>',{'class':'custom-select','id':this.id_form+'_'+nombre_control});
-        
-        $(button).text('Agregar Autor');
-        $(group_prepend).append(button);
-        
-        this.data.autores.data.forEach(function(autor){
-            
-            let option=$('<option>',{'value':autor['aut_id']});
-            $(option).text('['+autor['aut_tipo']+'] '+autor['aut_nombre']);
-            $(select).append(option);
-        });
-        
-        $(componente).append(group_prepend);
-        $(componente).append(select);
-        
-        return componente;
-    },
-    'form_obligatorios_create':function(){
-        
-        let componente=$('<div>',{'id':'componentes_obligatorios'});
-        
-        //Titulo
-        let atributos_control={'required':'required'};
-        let titulo=this.input_group_create('titulo','','Título',[atributos_control]);
-        
-        //Autores
-        atributos_control={'required':'required'};
-        let autores=this.input_custom_btn_create('autores','modal_form_autores');
-        let ul=$('<ul>',{'class':'list-group','id':'list_autores_'+this.id_form});
-        
-        
-        $(componente).append(titulo);
-        $(componente).append(autores);
-        $(componente).append(ul);
-        
-        return componente;
-    },
-    'body_create':function(label,contenido){
-        
-        let componente=$('<div>',{
-            'id':label,
-            'class':'collapse show',
-            'aria-labelledby':'header_'+label,
-            'data-parent':'#acordion_'+this.id_form
-        });
-        let card_body=$('<div>',{'class':'card-body'});
-        
-        $(card_body).append(contenido);
-        $(componente).append(card_body);
-        
-        return componente;
-    },
-    'accordeon_form_create':function(){
-        
-        let componente=$('<div>',{'role':'form','class':'accordion','id':'acordion_'+this.id_form});
-        let form=$('<form>',{'id':this.id_form});
-        let card_obligatorios=this.card_create('Campos Obligatorios','campos_obligatorios');
-        let card_opcionales=this.card_create('Campos Opcionales','campos_opcionales');
-        let body_obligatorios=this.body_create('campos_obligatorios',this.form_obligatorios_create());
-
-        $(componente).append(form);
-        $(componente).append(card_obligatorios).append(body_obligatorios).append(card_opcionales);
-        
-        return componente;
-    },
     'render':function(){
         
         let contenedor=$('<article>',{'id':this.id_form,'class':'container-fluid border'});
-        let formulario=$('<form>');
+        let formulario=$('<form>',{'id':'form_registro','class':"needs-validation",'novalidate':'novalidate'});
+        let btn_accion=$('<button>',{
+            'type':'submit',
+            'id':'btn_enviar_registro',
+            'class':'btn btn-primary ml-auto'
+        }).text('Registrar título');
         
-        $(formulario).append(this.crear_datos_bibliograficos());
+        $(formulario).append(this.crear_datos_bibliograficos()).append(btn_accion);
         
         $(contenedor).append(this.crear_cabecera('Datos Bibliográficos')).append(this.crear_anuncios()).append(formulario);
         
@@ -586,7 +565,7 @@ var form_autor={
             {'id':7,'tipo':'Adaptador'}
         ];
         let componente=$('<div>',{'class':'modal-body'});
-        let form=$('<form>',{'id':this.id_form});
+        let form=$('<form>',{'id':this.id_form,'class':'was-validated'});
         
         //Tipo de autor.
         let atributos_control={'required':'required'};
@@ -599,7 +578,7 @@ var form_autor={
         //País de origen.
         atributos_control={'required':'required'};
         let paises=this.data.paises.data;
-        let pais_origen=this.group_select_create('pais_origen',paises,'País de origen',[atributos_control],'pai_id','pai_pais');
+        let pais_origen=this.group_select_create('pais_origen',paises,'País de origen',[atributos_control],'pai_pais','pai_pais');
         
         $(form).append(tipo_autor);
         $(form).append(nombre);
@@ -956,21 +935,3 @@ var form_activacion_editorial={
     }
 };
 
-/*<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <button class="btn btn-outline-secondary" type="button">Button</button>
-  </div>
-  <select class="custom-select" id="inputGroupSelect03" aria-label="Example select with button addon">
-    <option selected>Choose...</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </select>
-    <ul class="list-group">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Morbi leo risus</li>
-      <li class="list-group-item">Porta ac consectetur ac</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-</div>*/
