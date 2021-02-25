@@ -110,7 +110,7 @@ $(document).ready(function(){
      * ********************** */
     function crear_encabezado(){
         
-        $('#cabecera_principal').append(componente_cabecera.render());
+        $('#cabecera_principal').append(componente_cabecera.render(base_url,datos.editorial_folio));
     }
     //--------------------------------------------------------------------------
     
@@ -238,7 +238,6 @@ $(document).ready(function(){
                         'edi_id':datos.editorial_folio,
                         'titulo':$('#form_registro_titulo').val(),
                         'titulo_original':$('#form_registro_titulo_original').val(),
-                        'material':$('#form_registro_material').val(),
                         'autor':$('#form_registro_autor').val(),
                         'indice_titulo':$('#form_registro_indice_titulo').val(),
                         'material_lengua_indigena':$('#form_registro_material_lengua_indigena').val(),
@@ -259,9 +258,22 @@ $(document).ready(function(){
                         'categoria':$('#form_registro_categoria').val(),
                         'precio_publico':$('#form_registro_precio_publico').val(),
                         'disponibilidad':$('#form_registro_disponibilidad').val(),
-                        'numero_tipo_papel':$('#form_registro_tipo_papel').val()
+                        'numero_tipo_papel':$('#form_registro_tipo_papel').val(),
+                        'formato':$('#form_registro_formato').val(),
+                        'ancho':$('#form_registro_ancho').val(),
+                        'alto':$('#form_registro_alto').val(),
+                        'paginas_totales':$('#form_registro_paginas_totales').val(),
+                        'paginas_preliminares':$('#form_registro_paginas_preliminares').val(),
+                        'paginas_finales':$('#form_registro_paginas_finales').val(),
+                        'lomo':$('#form_registro_lomo').val()
                     };
-
+                    
+                    if($('#form_registro_check_antologia').prop('checked')){
+                        datosJSON['antologia']=1;
+                    }
+                    if($('#form_registro_check_ilustrado').prop('checked')){
+                        datosJSON['ilustrado']=1;
+                    }
                     $.ajax({
                     async: true,
                     type: "POST",
@@ -292,6 +304,33 @@ $(document).ready(function(){
                 });
             }
             });
+            
+            $('#btn_cancelar_registro').on('click',e=>{
+                
+                e.preventDefault();
+                $('#section_titulos_registrados').children().show();
+                $('#seccion_frm_registro').children().remove();
+            });
+            
+            $('button.collapsed').off('click');
+            $('button.collapsed').on('click',e=>{
+                
+                e.preventDefault();
+                e.stopPropagation();
+                let id=$(e.target).attr('aria-controls');
+                let clase=$(`#${id}`).attr('class');
+                
+                $('div.collapse').removeClass('show');
+                
+                if(clase=='collapse'){
+                    
+                    $(`div#${id}`).addClass('show');
+                    console.log(clase);
+                    console.log($(`div#${id}`));
+                }
+                
+            });
+            
         }
         
     });
@@ -389,6 +428,7 @@ $(document).ready(function(){
                 if(respuesta.message==='Editorial Activada'){
 
                     swal("Exito!",respuesta.message, "success");
+                    location.reload();
                 }
                 else{
                     swal("Error!", respuesta.error.message, "error");

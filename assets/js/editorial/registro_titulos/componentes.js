@@ -3,40 +3,54 @@
 /* ******************* *
 * ***** Cabecera ***** *
 * ******************** */
-var cabecera={
+let cabecera={
     crear_btn_group:function(btns){
         
         let btn_group=$('<div>',{'class':'btn-group ml-auto'});
         
         btns.forEach(btn=>{
             
-            $(btn_group).append($('<button>',{'id':btn.id,'type':'button','class':'btn btn-secondary'}).text(btn.valor));
+            
+            $(btn_group).append($(`<${btn.tipo}>`,{
+                'id':btn.id,
+                'type':'button',
+                'class':'btn btn-secondary',
+                'href':btn.href,
+                'target':btn.target
+            }).text(btn.valor));
         });
         
         return btn_group;
     },
-    render:function(){
+    render:function(base_url,edi_id){
+        
         let encabezado=$('<div>',{'class':'container-fluid border'});
         let titulo='Registro de títulos';
         let row_titulo=$('<div>',{'class':'row text-left ml-4 mt-4'});
         let row_btns_accion=$('<div>',{'class':'row text-right'});
         
-        
-        let h2=$('<h2>',{'class':'display-6'}).text(titulo);
-        $(row_titulo).append(h2);
+        let h3=$('<h3>',{'class':'display-6'}).text(titulo);
+        $(row_titulo).append(h3);
         
         $(row_btns_accion).append(this.crear_btn_group([
             {
                 'id':'btn_ejemplo_etiquetas',
-                'valor':'Ejemplo para etiquetas'
+                'valor':'Ejemplo para etiquetas',
+                'tipo':'a'
             },
             {
                 'id':'btn_titulos_registrados',
-                'valor':'Titulos registrados (Excel)'
+                'valor':'Titulos registrados (Excel)',
+                'tipo':'a',
+                'href':`${base_url}editorial/registro_titulos/titulos_registrados_excel/${edi_id}`,
+                'target':'_blank'
             },
             {
                 'id':'btn_lista_oficial',
-                'valor':'Lista oficial Títulos Registrados'
+                'valor':'Lista oficial Títulos Registrados',
+                'tipo':'a',
+                'href':`${base_url}editorial/registro_titulos/lista_oficial_titulos/${edi_id}`,
+                'target':'_blank'
             }
         ]));
         
@@ -50,7 +64,7 @@ var cabecera={
 /* ********************************* *
 * ***** Boton Registrar Título ***** *
 * ********************************** */
-var btn_registrar_titulo={
+let btn_registrar_titulo={
     
     render(){
         
@@ -65,7 +79,7 @@ var btn_registrar_titulo={
 /* *************************************** *
 * ***** Tabla de títulos Registrados ***** *
 * **************************************** */
-var tabla_titulos_registrados={
+let tabla_titulos_registrados={
     render:function(){
         
         let tabla=$('<table>',{'id':'tbl_titulos_registrados'});
@@ -82,7 +96,7 @@ var tabla_titulos_registrados={
                 'dataSrc':''
             },
             'columns':[
-                {'data':'edi_id','title':'Folio'},
+                {'data':'folio','title':'Folio'},
                 {'data':'titulo','title':'Título'},
                 {'data':'id','title':'Editar','render':data=>{
                         let btn_editar_titulo=
@@ -101,7 +115,7 @@ var tabla_titulos_registrados={
                                 `<a
                                     id="btn_descarga_acuse_${data}"
                                     class="btn btn-md btn-outline-secondary m-0 px-3 py-2 z-depth-0 waves-effect"
-                                    href="${base_url}editorial/registro_titulos/crear_acuse/${data}"
+                                    href="${base_url}editorial/registro_titulos/acuse_titulo/${data}"
                                     target="_blank">`+
                                     
                                     `<i class="fa fa-file"></i>`+
@@ -120,8 +134,66 @@ var tabla_titulos_registrados={
 };
 //--------------------------------------------------------------------------
 
-var form_registro_titulos={
+/* ******************************************** *
+* ***** Formulario de registro de titulos ***** *
+* ********************************************* */
+let form_registro_titulos={
     'data':'',
+    'bilingue':{
+        'data':[
+            {'lengua':'Cochimí'},
+            {'lengua':'Pa-Ipai'},
+            {'lengua':'Kiliwa'},
+            {'lengua':'Kumiai'},
+            {'lengua':'Cucapá'},
+            {'lengua':'Seri'},
+            {'lengua':'Pima'},
+            {'lengua':'Mayo'},
+            {'lengua':'Yaqui'},
+            {'lengua':'Cahita'},
+            {'lengua':'Otomí'},
+            {'lengua':'Kikapú'},
+            {'lengua':'Tepehúan'},
+            {'lengua':'Tarahumara'},
+            {'lengua':'Huichol'},
+            {'lengua':'Cora'},
+            {'lengua':'Chichimeca-Jonaz'},
+            {'lengua':'Náhuatl'},
+            {'lengua':'Huasteco'},
+            {'lengua':'Purépecha'},
+            {'lengua':'Mixteco'},
+            {'lengua':'Mazahua'},
+            {'lengua':'Totonaca'},
+            {'lengua':'Zapoteco'},
+            {'lengua':'Mixe'},
+            {'lengua':'Zoque'},
+            {'lengua':'Chinanteco'},
+            {'lengua':'Chontal'},
+            {'lengua':'Tzotzil'},
+            {'lengua':'Tzeltal'},
+            {'lengua':'Chol'},
+            {'lengua':'Tojolabal'},
+            {'lengua':'Mame'},
+            {'lengua':'Maya'},
+            {'lengua':'Kekchi'},
+            {'lengua':'Ixil'},
+            {'lengua':'Quiché'},
+            {'lengua':'Popoluca'},
+            {'lengua':'Tepehua'},
+            {'lengua':'Mazateco'},
+            {'lengua':'Tlapaneco'},
+            {'lengua':'Chontal de Tabasco'},
+            {'lengua':'Chatino'},
+            {'lengua':'Amuzgo'},
+            {'lengua':'Trique'},
+            {'lengua':'Huave'},
+            {'lengua':'Guarijío'},
+            {'lengua':'Tének'},
+            {'lengua':'Wixárika'},
+            {'lengua':'Mapuche'},
+            {'lengua':'Jakalteco'}
+        ]
+    },
     'datos_bibliograficos':{
         'edi_id':{
             'tipo':'hidden',
@@ -157,7 +229,8 @@ var form_registro_titulos={
         'autor':{
             'tipo':'btn_crear_seleccion',
             'atributos':{
-                'required':'required'
+                'required':'required',
+                'multiple':'multiple'
             },
             'val':'',
             'etiqueta':'Autores:',
@@ -174,10 +247,13 @@ var form_registro_titulos={
             'etiqueta':'Indice del título:'
         },
         'material_lengua_indigena':{
-            'tipo':'textarea',
+            'tipo':'seleccion',
             'atributos':null,
             'val':'',
-            'etiqueta':'Material en lengua indigena:'
+            'etiqueta':'Material en lengua indigena:',
+            'id':'lengua',
+            'textos':['','lengua'],
+            'tabla':'bilingue'
         },
         'sello':{
             'tipo':'seleccion',
@@ -334,6 +410,67 @@ var form_registro_titulos={
             'tabla':'tipos_papel'
         }
     },
+    'datos_tecnicos':{
+        'formato':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Formato (orientación):',
+            'id':'formato',
+            'textos':['','formato'],
+            'tabla':'formatos'
+        },
+        'ancho':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Ancho:'
+        },
+        'alto':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Alto:'
+        },
+        'paginas_totales':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Páginas totales:'
+        },
+        'paginas_preliminares':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Páginas preliminares:'
+        },
+        'paginas_finales':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Páginas blancas finales o con promoción:'
+        },
+        'lomo':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Lomo:'
+        }
+    },
     'id_form':'form_registro',
     'crear_cabecera':function(seccion){
         
@@ -341,7 +478,7 @@ var form_registro_titulos={
         let h2=$('<h2>',{'class':'text-center'});
         let p=$('<p>',{'class':'alert alert-danger text-center'});
         
-        $(h2).text(`Registro de títulos - ${seccion}`);
+        $(h2).text(`Registro de títulos`);
         
         $(componente).append(h2);
         
@@ -370,9 +507,29 @@ var form_registro_titulos={
             {'tipo':8}
         ]};
             
-        let componente=$('<section>',{'id':this.id_form+'_datos_bibliograficos','class':'mx-10'});
+        this.data['bilingue']=this.bilingue;
+        
+        let componente=$('<section>',{'id':this.id_form+'_datos_bibliograficos','class':'mx-10','titulo':'datos_bibliograficos'});
         
         $.each(this.datos_bibliograficos,(key,dato)=>{
+            
+            let control=form_registro_titulos.crear_input_group(key,dato);
+            $(componente).append(control);
+        });
+        
+        return componente;
+    },
+    'crear_datos_tecnicos':function(){
+        
+        this.data['formatos']={'data':[
+            
+            {'formato':'horizontal'},
+            {'formato':'vertical'}
+        ]};
+            
+        let componente=$('<section>',{'id':this.id_form+'_datos_tecnicos','class':'mx-10','titulo':'datos_tecnicos'});
+        
+        $.each(this.datos_tecnicos,(key,dato)=>{
             
             let control=form_registro_titulos.crear_input_group(key,dato);
             $(componente).append(control);
@@ -413,7 +570,7 @@ var form_registro_titulos={
         }
         else if(dato.tipo==='seleccion'){
             
-            control_input=this.crear_input_seleccion(nombre_control,dato.tabla,dato.id,dato.textos);
+            control_input=this.crear_input_seleccion(nombre_control,dato.tabla,dato.id,dato.textos,dato.etiqueta);
         }
         else{
             
@@ -505,7 +662,7 @@ var form_registro_titulos={
         
         let select=$('<select>',{'class':'custom-select','id':`${this.id_form}_${nombre_control}`});
         
-        $(select).append($('<option>',{'value':false}).text(`Selecciona un ${nombre_control}`));
+        $(select).append($('<option>',{'value':false}).text(`Selecciona uno`));
         this.data[tabla].data.forEach(function(control){
 
             let option=$('<option>',{'value':control[id]});
@@ -515,25 +672,95 @@ var form_registro_titulos={
         
         return select;
     },
+    'crear_card':function(seccion){
+        
+        const id=$(seccion).attr('id');
+        let titulo;
+        const seccion_titulo=$(seccion).attr('titulo');
+        const card=$('<div>',{'id':`card_${id}`,'class':'card'});
+        
+        switch(seccion_titulo){
+            
+            case 'datos_bibliograficos':
+                titulo='Datos Bibliográficos';
+                break;
+            case 'datos_tecnicos':
+                titulo='Datos Técnicos';
+                break;
+        }
+        
+        const card_header=$('<div>',{'id':seccion_titulo,'class':'card-header'});
+        const h3=$('<h3>',{'class':'mb-0'});
+        const button=$('<button>',{
+            'class':'btn btn-link btn-block text-left collapsed',
+            'type':'button',
+            'data-toggle':"collapse",
+            'data-target':`#collapse_${seccion_titulo}`,
+            'aria-expanded':false,
+            'aria-controls':`collapse_${seccion_titulo}`
+        });
+        
+        $(button).text(titulo);
+        $(h3).append(button);
+        $(card_header).append(h3);
+        
+        
+        const collapse=$('<div>',{
+            'id':`collapse_${seccion_titulo}`,
+            'class':'collapse',
+            'aria-labelledby':seccion_titulo,
+            'data-parent':`#${id}`
+        });
+        const card_body=$('<div>',{'class':'card-body'});
+        
+        $(card_body).append(seccion);
+        $(collapse).append(card_body);
+        
+        $(card).append(card_header).append(collapse);
+        
+        return card;
+    },
+    'crear_acordion':function(secciones){
+        
+        let acordion=$('<div>',{'id':'acordion','class':'accordion'});
+        
+        secciones.forEach(titulo=>{
+            
+            $(acordion).append(titulo);
+        });
+        
+        return acordion;
+    },
     'render':function(){
         
-        let contenedor=$('<article>',{'id':this.id_form,'class':'container-fluid border'});
-        let formulario=$('<form>',{'id':'form_registro','class':"needs-validation",'novalidate':'novalidate'});
-        let btn_accion=$('<button>',{
+        const contenedor=$('<article>',{'id':this.id_form,'class':'container-fluid border'});
+        const formulario=$('<form>',{'id':'form_registro','class':"needs-validation",'novalidate':'novalidate'});
+        const datos_bibliograficos=this.crear_card(this.crear_datos_bibliograficos());
+        const datos_tecnicos=this.crear_card(this.crear_datos_tecnicos());
+        const acordion=this.crear_acordion([datos_bibliograficos,datos_tecnicos]);
+        const btn_enviar=$('<button>',{
             'type':'submit',
             'id':'btn_enviar_registro',
-            'class':'btn btn-primary ml-auto'
+            'class':'btn btn-primary'
         }).text('Registrar título');
+        const btn_cancelar=$('<button>',{
+            'type':'reset',
+            'id':'btn_cancelar_registro',
+            'class':'btn btn-danger'
+        }).text('Cancelar registrar');
+        const btns=$('<div>',{'class':'mx-auto'});
         
-        $(formulario).append(this.crear_datos_bibliograficos()).append(btn_accion);
+        $(btns).append(btn_enviar).append(btn_cancelar);
+        $(formulario).append(acordion).append(btns);
         
         $(contenedor).append(this.crear_cabecera('Datos Bibliográficos')).append(this.crear_anuncios()).append(formulario);
         
         return contenedor;
     }
 };
+//--------------------------------------------------------------------------
 
-var form_autor={
+let form_autor={
     'data':'',
     'id_form':'form_autores',
     'header_create':function(){
@@ -679,7 +906,7 @@ var form_autor={
     }
 };
 
-var form_activacion_editorial={
+let form_activacion_editorial={
     'data':'',
     'id_form':'form_activacion_editorial',
     'desalertar':function(){

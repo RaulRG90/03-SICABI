@@ -291,5 +291,198 @@ class Pdf {
         }
         return $extraccion;
     }
+    
+    public function lista_oficial_titulos($titulos,$edi_id,$nombre_editorial){
+        
+        $dir='editorial/registro_titulos/lista_oficial_titulos/'.$edi_id;
+        $mpdf=new \Mpdf\Mpdf([
+            'margin_top' => 30,
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_bottom' => 30,
+            'mirrorMargins' => false
+        ]);
+        
+        $mpdf->SetTitle($nombre_editorial);
+        $mpdf->SetHTMLHeader( 
+            '<table width="100%">'.
+                '<tr style="padding:0 0;">'.
+                    '<td width="50%" style="padding:1px 1px;">'.
+                        '<figure>'.
+                            '<img src="'.base_url(LOGOTIPO).'" height="100" style="marging:0 0;" />'.
+                        '</figure>'.
+                    '</td>'.
+                    '<td width="70%" style="border-bottom: 2px solid black;text-align:center;padding:1px 1px;">'.
+                        '<p style="font-weight: bold;">'.
+                            PROCESO.
+                        '</p>'.
+                        '<p style="font-weight: bold;">'.
+                            'Bibliotecas '.BIBLIOTECA.', Ciclo Escolar '.CICLO.
+                        '</p>'.
+                        '<p style="font-weight: bold;">'.
+                            'Acreditación de Titulares o Representantes Editoriales'.
+                        '</p>'.
+                    '</td>'.
+                '</tr>'.
+            '</table>');
+        
+        $mpdf->SetHTMLFooter('<hr>
+        <table width="100%">
+            <tr>
+                <td width="33%" style="font-size:10;text-align: left;">
+                Secretaría de Educación Pública<br>
+                Subsecretaría de Educación Básica<br> 
+                Dirección General de Materiales Educativos
+                </td>
+                <td width="33%"></td>
+                <td width="33%" style="font-size:10;text-align:right;font-family: Verdana, Arial, Tahoma, Serif;">'.base_url($dir).'<br>Página {PAGENO} de {nbpg}</td>
+            </tr>
+        </table>');
+        
+        $mpdf->WriteHTML('<br/>');
+        $mpdf->WriteHTML('<h1 style="text-align:center;">'.$nombre_editorial.'</h1>');
+        $mpdf->WriteHTML('<table style="border:0.5px solid;width:100%;border-collapse:collapse">');
+        $mpdf->WriteHTML('<tr style="background-color:gray; font-weight:bold">');
+        $mpdf->WriteHTML('<th>Folio</th><th>Título</th><th>Nivel</th><th>Genero</th><th>Categoría</th><th>Sello</th>');
+        $mpdf->WriteHTML('</tr>');
+        $contador=1;
+        foreach($titulos as $key=>$titulo){
+            $formato='%1$06d';
+            $folio=$titulo['edi_id'].'-'.sprintf($formato,$titulo['id']).'-'.date('Y', strtotime($titulo['fecha_creacion']));
+            
+            if($contador%2==0){
+                
+                $mpdf->WriteHTML('<tr style="background-color:#cccccc;">');
+            }
+            else{
+                
+                $mpdf->WriteHTML('<tr>');
+            }
+            
+            $mpdf->WriteHTML(
+                '<td>'.$folio.'</td>'.
+                '<td>'.$titulo['titulo'].'</td>'.
+                '<td>'.$titulo['nivel'].'</td>'.
+                '<td>'.$titulo['genero'].'</td>'.
+                '<td>'.$titulo['categoria'].'</td>'.
+                '<td>'.$titulo['sello'].'</td>'
+            );
+            $mpdf->WriteHTML('</tr>');
+            
+            $contador++;
+        }
+        $mpdf->WriteHTML('</table>');
+        
+        //$mpdf->Output('test.pdf','D');
+        $mpdf->Output();
+    }
+    
+    public function acuse_titulo($titulo,$id,$editorial){
+        
+        $dir='editorial/registro_titulos/acuse_titulo/'.$id;
+        $mpdf=new \Mpdf\Mpdf([
+            'margin_top' => 30,
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_bottom' => 30,
+            'mirrorMargins' => false
+        ]);
+        
+        $mpdf->SetTitle('Acuse de titulo');
+        $mpdf->SetHTMLHeader( 
+            '<table width="100%">'.
+                '<tr style="padding:0 0;">'.
+                    '<td width="50%" style="padding:1px 1px;">'.
+                        '<figure>'.
+                            '<img src="'.base_url(LOGOTIPO).'" height="100" style="marging:0 0;" />'.
+                        '</figure>'.
+                    '</td>'.
+                    '<td width="70%" style="border-bottom: 2px solid black;text-align:center;padding:1px 1px;">'.
+                        '<p style="font-weight: bold;">'.
+                            PROCESO.
+                        '</p>'.
+                        '<p style="font-weight: bold;">'.
+                            'Bibliotecas '.BIBLIOTECA.', Ciclo Escolar '.CICLO.
+                        '</p>'.
+                        '<p style="font-weight: bold;">'.
+                            'Acreditación de Titulares o Representantes Editoriales'.
+                        '</p>'.
+                    '</td>'.
+                '</tr>'.
+            '</table>');
+        
+        $mpdf->SetHTMLFooter('<hr>
+        <table width="100%">
+            <tr>
+                <td width="33%" style="font-size:10;text-align: left;">
+                Secretaría de Educación Pública<br>
+                Subsecretaría de Educación Básica<br> 
+                Dirección General de Materiales Educativos
+                </td>
+                <td width="33%"></td>
+                <td width="33%" style="font-size:10;text-align:right;font-family: Verdana, Arial, Tahoma, Serif;">'.base_url($dir).'<br>Página {PAGENO} de {nbpg}</td>
+            </tr>
+        </table>');
+        $formato='%1$06d';
+        $folio=$titulo['edi_id'].'-'.sprintf($formato,$titulo['id']).'-'.date('Y', strtotime($titulo['fecha_creacion']));
+        $mpdf->WriteHTML('<br/>');
+        $mpdf->WriteHTML('<table style="width:100%; padding:2px 10px">');
+        $mpdf->WriteHTML('<tr>');
+        $mpdf->WriteHTML('<td style="border:0.5px solid;padding:5px 10px;line-height:1.5;width:60%">TÍTULO: <span style="font-weight:bold">'.$titulo['titulo'].'</span><br/>');
+        $mpdf->WriteHTML('EDICIÓN: <span style="font-weight:bold">'.$titulo['edicion'].'</span><br/>');
+        $mpdf->WriteHTML('NIVEL: <span style="font-weight:bold">'.$titulo['nivel'].'</span><br/>');
+        $mpdf->WriteHTML('GENERO: <span style="font-weight:bold">'.$titulo['genero'].'</span><br/>');
+        $mpdf->WriteHTML('CATEGORÍA: <span style="font-weight:bold">'.$titulo['categoria'].'</span><br/>');
+        $mpdf->WriteHTML('</td>');
+        $mpdf->WriteHTML('<td style="font-weight:bold;text-align:center">FOLIO: '.$folio.'</td>');
+        $mpdf->WriteHTML('</tr>');
+        $mpdf->WriteHTML('</table>');
+        $mpdf->WriteHTML('<br />');
+        $mpdf->WriteHTML('<br />');
+        $mpdf->WriteHTML('<p style="border:0.5px solid;padding:5px 5px">'.
+            '<span style="font-weight:bold;">[BIBLIOGRAFICOS]</span> '.
+                '<span style="font-weight:bold;">Autor(es):</span> | '.
+                '<span style="font-weight:bold;">Título en lengua original:</span> '.$titulo['titulo_original'].' | '.
+                '<span style="font-weight:bold;">Material ilustrado:</span> '.((bool)$titulo['ilustrado']?'Si':'No').' | '.
+                '<span style="font-weight:bold;">Antología:</span> '.((bool)$titulo['antologia']?'Si':'No').' | '.
+                '<span style="font-weight:bold;">Índice de la angología:</span> '.$titulo['indice_titulo'].' | '.
+                '<span style="font-weight:bold;">Material en lengua Indígena:</span> '.$titulo['material_lengua_indigena'].' | '.
+                '<span style="font-weight:bold;">Sello editorial:</span> '.$titulo['sello'].' | '.
+                '<span style="font-weight:bold;">Año:</span> '.$titulo['anio'].' | '.
+                '<span style="font-weight:bold;">Tiraje:</span> '.$titulo['tiraje'].' | '.
+                '<span style="font-weight:bold;">ISBN:</span> '.$titulo['isbn'].' | '.
+                '<span style="font-weight:bold;">Páginas con folio:</span> '.$titulo['paginas_con_folio'].' | '.
+                '<span style="font-weight:bold;">País:</span> '.$titulo['pais'].' | '.
+                '<span style="font-weight:bold;">Ciudad:</span> '.$titulo['ciudad'].' | '.
+                '<span style="font-weight:bold;">Reconocimiento para el libro:</span> '.$titulo['reconocimiento_libro'].' | '.
+                '<span style="font-weight:bold;">Reconocimiento para el autor:</span> '.$titulo['reconocimiento_autor'].' | '.
+                '<span style="font-weight:bold;">Reconocimiento para el ilustrador:</span> '.$titulo['reconocimiento_ilustrador'].' | '.
+                '<span style="font-weight:bold;">Precio al público:</span> '.$titulo['precio_publico'].' | '.
+                '<span style="font-weight:bold;">Disponibilidad:</span> '.$titulo['disponibilidad'].
+                '<br/>'.
+                '<br/>'.
+            '<span style="font-weight:bold;">[TÉCNICOS]</span> '.
+                '<span style="font-weight:bold;">Formato (orientación:</span> '.$titulo['formato'].
+                '<span style="font-weight:bold;"> Alto:</span> '.$titulo['alto'].
+                '<span style="font-weight:bold;"> Ancho:</span> '.$titulo['ancho'].') | '.
+                '<span style="font-weight:bold;">Núm. de páginas totales:</span> '.$titulo['paginas_totales'].' | '.
+                '<span style="font-weight:bold;">Núm. de páginas preliminares:</span> '.$titulo['paginas_preliminares'].' | '.
+                '<span style="font-weight:bold;">Núm. de páginas blancas finales o con promoción:</span> '.$titulo['paginas_finales'].' | '.
+                '<span style="font-weight:bold;">Lomo:</span> '.$titulo['lomo'].' mm'.
+        '</p>');
+        $mpdf->WriteHTML('<br />');
+        $mpdf->WriteHTML('<br />');
+        $mpdf->WriteHTML('<br />');
+        $mpdf->WriteHTML(
+            '<p style="text-align:center">'.
+                $editorial['edi_repnombre'].'<br/>'.
+                $editorial['edi_repcargo'].'<br/>'.
+            '</p>'
+        );
+        $mpdf->WriteHTML('<hr style="width:40%"/>');
+        $mpdf->WriteHTML('<p style="text-align:center">Firma del representante</p>');
+        //$mpdf->Output('test.pdf','D');
+        $mpdf->Output();
+    }
 }
    

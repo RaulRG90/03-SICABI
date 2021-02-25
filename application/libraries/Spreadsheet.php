@@ -465,4 +465,35 @@ class Spreadsheet{
         $this->sheet_seleccion->getColumnDimension('A')->setWidth(45);
         $this->sheet_seleccion->getColumnDimension('J')->setWidth(60);
     }
+    
+    public function titulos_registrados_excel($titulos){
+        
+        $worksheet=new PhpOffice\PhpSpreadsheet\Spreadsheet();
+        
+        $sheet=$worksheet->getSheet(0)->setTitle('Títulos registrados');
+        
+        $sheet->setCellValue('A1',$titulos[0]['editorial']);
+        
+        $row=3;
+        foreach($titulos as $key=>$titulo){
+            
+            $col=1;
+            foreach($titulo as $attr=>$val){
+                
+                if($sheet->getCellByColumnAndRow($col,2)->getValue()=='') $sheet->setCellValueByColumnAndRow($col,2,$attr);
+                $sheet->setCellValueByColumnAndRow($col,$row,$val);
+                $col++;
+            }
+            $row++;
+        }
+        
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="titulos_registrados.xlsx"');
+        header('Cache-Control: max-age=0');
+        
+        $writer = PhpOffice\PhpSpreadsheet\IOFactory::createWriter($worksheet, 'Xlsx');
+        $writer->save('php://output');
+        exit;
+    }
 }

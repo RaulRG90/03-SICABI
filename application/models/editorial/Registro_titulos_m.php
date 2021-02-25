@@ -290,7 +290,7 @@ class Registro_titulos_m extends CI_Model {
             'numero_tipo_papel'=>$datos_registro['numero_tipo_papel'],
         ];
         
-        $query=$this->db->insert('libros',$data);
+        $query=$this->db->insert('libros',$datos_registro);
         
         if(empty($query)){
 
@@ -313,7 +313,10 @@ class Registro_titulos_m extends CI_Model {
     */
     public function leer_titulos_registrados($edi_id){
         
-        $query=$this->db->get_where('libros',['edi_id'=>$edi_id]);
+        $this->db->select('libros.*, edi_sellos.sel_sello as sello, editoriales.edi_razonsocial as editorial');
+        $this->db->join('edi_sellos','libros.sello_id=edi_sellos.sel_id');
+        $this->db->join('editoriales','libros.edi_id=editoriales.id');
+        $query=$this->db->get_where('libros',['libros.edi_id'=>$edi_id]);
         
         if(empty($query)){
 
@@ -325,6 +328,31 @@ class Registro_titulos_m extends CI_Model {
             
             $response['status']='success';
             $response['message']='Libros Leidos';
+            $response['data']=$query->result_array();
+        }
+        
+        return $response;
+    }
+    // --------------------------------------------------------------
+    
+    
+    public function leer_titulo_registrado($id){
+        
+        $this->db->select('libros.*, edi_sellos.sel_sello as sello, editoriales.edi_razonsocial as editorial');
+        $this->db->join('edi_sellos','libros.sello_id=edi_sellos.sel_id');
+        $this->db->join('editoriales','libros.edi_id=editoriales.id');
+        $query=$this->db->get_where('libros',['libros.id'=>$id]);
+        
+        if(empty($query)){
+
+            $error=$this->db->error();
+            $response['status']='error';
+            $response['error']=error_array($error);
+        }
+        else{
+            
+            $response['status']='success';
+            $response['message']='Libro Leido';
             $response['data']=$query->result_array();
         }
         

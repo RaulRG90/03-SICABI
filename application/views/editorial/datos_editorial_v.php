@@ -6,11 +6,8 @@
 <div id="contenedor_principal" class="container-fluid">
     <input id="editorial_estatus" type="hidden" value="<?=$editorial_estatus?>" />
     <input id="editorial_folio" type="hidden" value="<?=$editorial_folio?>" />
-    <article id="contenedor_registro">
-        <header id="cabecera_principal"></header>
-        <section id="btn_registrar_titulo"></section>
-        <section id="section_titulos_registrados"></section>
-        <section id="seccion_frm_registro"></section>
+    <article id="contenedor_datos">
+        <section id="seccion_frm_editorial"></section>
     </article>
 </div>
 <div id="modales">
@@ -22,4 +19,5 @@
 <script type="text/javascript" src="<?=base_url('assets/data_tables/datatables.min.js')?>"></script>
 <!--Módulo-->
 <script type="text/javascript">var base_url='<?=base_url()?>';</script>
-<script src="<?=base_url('assets/js/editorial/registro_titulos.min.js')?>" type="text/javascript"></script>
+<script src="<?=base_url('assets/js/editorial/datos_editorial.min.js')?>" type="text/javascript"></script>
+
