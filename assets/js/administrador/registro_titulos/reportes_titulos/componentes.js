@@ -106,7 +106,7 @@ var conteo_diario={
         return Object.keys(data);
     },
     get_datasets:function(datos,backgroud){
-        
+        console.log(datos);
         let dataset=[];
         let objetos=Object.keys(datos);
         
@@ -188,15 +188,15 @@ var tbl_descargar_excel={
         $(thead).append(row_head);
         
         $(titulo_general).text('EXCEL GENERAL');
-        $(titulo_editorial_num).text('NÚMERO DE EDITORIAL');
-        $(titulo_editorial_dia).text('EDITORIAL Y SELLOS POR DÍA');
+        $(titulo_editorial_num).text('TÍTULOS X EDITORIAL');
+        $(titulo_editorial_dia).text('TÍTULOS X EDITORIAL');
         
-        $(descripcion_general).text('Contiene todos los atributos de la editorial');
-        $(descripcion_editorial_num).text('Muestra todas las editoriales y el número');
-        $(descripcion_editorial_dia).text('Desgloza las editoriales por día y número');
+        $(descripcion_general).text('Contiene todos los atributos de título + editorial');
+        $(descripcion_editorial_num).text('Muestra el número total de títulos por editorial');
+        $(descripcion_editorial_dia).text('Desgloza las editoriales y número de títulos que');
         
         $(descarga_general).html('<a href="'+api_descargar_reporte+'/general">DESCARGAR</a>');
-        $(descarga_editorial_num).html('<a href="'+api_descargar_reporte+'/editorial">DESCARGAR</a>');
+        $(descarga_editorial_num).html('<a href="'+api_descargar_reporte+'/total_titulos_editorial">DESCARGAR</a>');
         $(descarga_editorial_dia).html('<a href="'+api_descargar_reporte+'/titulo_editoriales_dia">DESCARGAR</a>');
         
         $(row1).append(titulo_general).append(descripcion_general).append(descarga_general);

@@ -99,7 +99,7 @@ $db['local'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'postgres',
-	'password' => 'asian',
+	'password' => 'root',
 	'database' => 'sicabi',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
@@ -115,6 +115,6 @@ $db['local'] = array(
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE,
-	//'port' => 5434
+	'port' => 5432
 );
 

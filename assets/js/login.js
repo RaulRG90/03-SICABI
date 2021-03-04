@@ -1,9 +1,9 @@
 'use strict';
-var componentes=base_url+'/assets/js/login/componentes.min.js';
+var componentes=base_url+'assets/js/login/componentes.min.js';
 var componente_login;
 
-var api_leer_nombre_sistema=base_url+'/login/leer_nombre_sistema';
-var api_iniciar_sesion=base_url+'/login/iniciar_sesion';
+var api_leer_nombre_sistema=base_url+'login/leer_nombre_sistema';
+var api_iniciar_sesion=base_url+'login/iniciar_sesion';
 
 var datos={};
 
@@ -40,8 +40,8 @@ $(document).ready(function(){
      * ***** Crear GUI Inicio de sesión ***** *
      * ************************************** */
     
-    crear_gui_seleccion_indicativa();
-    function crear_gui_seleccion_indicativa(){
+    crear_gui_login();
+    function crear_gui_login(){
         
         leer_datos(api_leer_nombre_sistema,'nombre_sistema');
         iniciar_contenedores();
@@ -150,7 +150,7 @@ $(document).ready(function(){
                 }
             },
             error:function(error){
-                
+                console.log(error);
                 swal('¡Error Desconocido!','Comuniquese con el administrador','error');
             }
         });

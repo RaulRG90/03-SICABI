@@ -99,7 +99,7 @@ class Acreditacion extends CI_Controller{
                     [
                         'field'=>'usu_nombre',
                         'label'=>'Nombre del usuario',
-                        'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces','is_unique[usuarios.usu_nombre]'],
+                        'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces_spanish','is_unique[usuarios.usu_nombre]'],
                         'errors'=>[
                             'is_unique'=>'El {field} ya está en uso.'
                         ]
@@ -107,7 +107,7 @@ class Acreditacion extends CI_Controller{
                     [
                         'field'=>'usu_login',
                         'label'=>'Equipos',
-                        'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces','is_unique[usuarios.usu_nombre]']
+                        'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces_spanish','is_unique[usuarios.usu_nombre]']
                     ],
                     [
                         'field'=>'id_perfil',
@@ -117,7 +117,7 @@ class Acreditacion extends CI_Controller{
                     [
                         'field'=>'usu_pass',
                         'label'=>'Contraseña de usuario',
-                        'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces']
+                        'rules'=>['required','trim','min_length[1]','max_length[100]','alpha_numeric_spaces_spanish']
                     ]
                 ];
                 break;
