@@ -110,22 +110,22 @@ class Convocatoria extends CI_Controller{
                     [
                         'field'=>'ciclo',
                         'label'=>'Ciclo escolar',
-                        'rules'=>['required','trim','min_length[1]','max_length[10]','alpha_dash']
+                        'rules'=>['required','trim','min_length[1]','max_length[10]','alpha_numeric_spaces_dash_spanish']
                     ],
                     [
                         'field'=>'nombre_sistema',
                         'label'=>'Nombre de sistema',
-                        'rules'=>['required','trim','min_length[1]','max_length[250]','alpha_numeric_spaces']
+                        'rules'=>['required','trim','min_length[1]','max_length[250]','alpha_numeric_spaces_spanish']
                     ],
                     [
                         'field'=>'nombre_proceso',
                         'label'=>'Nombre de proceso',
-                        'rules'=>['required','trim','min_length[1]','max_length[250]','alpha_numeric_spaces']
+                        'rules'=>['required','trim','min_length[1]','max_length[250]','alpha_numeric_spaces_spanish']
                     ],
                     [
                         'field'=>'siglas',
                         'label'=>'Siglas de sistema',
-                        'rules'=>['required','trim','min_length[1]','max_length[20]','alpha_numeric_spaces']
+                        'rules'=>['required','trim','min_length[1]','max_length[20]','alpha_numeric_spaces_spanish']
                     ],
                     [
                         'field'=>'biblioteca',

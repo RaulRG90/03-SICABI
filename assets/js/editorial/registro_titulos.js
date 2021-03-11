@@ -119,7 +119,7 @@ $(document).ready(function(){
      * ********************************** */
     function crear_btn_registrar_titulo(){
         
-        $('#btn_registrar_titulo').append(componente_btn_registrar_titulo.render());
+        $('#section_btn_registrar_titulo').append(componente_btn_registrar_titulo.render());
     }
     
     $('#btn_registrar_titulo').on('click',(e)=>{
@@ -265,7 +265,47 @@ $(document).ready(function(){
                         'paginas_totales':$('#form_registro_paginas_totales').val(),
                         'paginas_preliminares':$('#form_registro_paginas_preliminares').val(),
                         'paginas_finales':$('#form_registro_paginas_finales').val(),
-                        'lomo':$('#form_registro_lomo').val()
+                        'lomo':$('#form_registro_lomo').val(),
+                        'forro':$('#form_registro_forro').val(),
+                        'solapa':$('#form_registro_forro_solapa').val(),
+                        'papel_forro_1':$('#form_registro_papel_forro1').val(),
+                        'papel_forro_2':$('#form_registro_papel_forro2').val(),
+                        'gramaje_forro_1':$('#form_registro_gramaje_forro1').val(),
+                        'gramaje_forro_2':$('#form_registro_gramaje_forro1').val(),
+                        'tinta_forro':$('#form_registro_tintas_forro').val(),
+                        'acabado_forro':$('#form_registro_acabado_forro').val(),
+                        'suaje_forro':$('#form_registro_suaje').val(),
+                        'grabado_forro':$('#form_registro_grabado').val(),
+                        'foliacion':$('#form_registro_foliacion').val(),
+                        'papel_guardas_1':$('#form_registro_papel_guardas').val(),
+                        'papel_guardas_2':$('#form_registro_papel_guardas2').val(),
+                        'tinta_guardas':$('#form_registro_tintas_guarda').val(),
+                        'num_paginas_interior_1':$('#form_registro_num_paginas').val(),
+                        'papel_interior_1_1':$('#form_registro_papel_interior_1').val(),
+                        'papel_interior_1_2':$('#form_registro_papel_interior_1_2').val(),
+                        'gramaje_interior_1_1':$('#form_registro_gramaje_interior_1').val(),
+                        'gramaje_interior_1_2':$('#form_registro_gramaje_interior_1_2').val(),
+                        'tinta_interior_1':$('#form_registro_tinta_interior_1').val(),
+                        'acabados_interior_1':$('#form_registro_acabados_interior_1').val(),
+                        'suaje_interior_1':$('#form_registro_suaje_interior_1').val(),
+                        'grabado_interior_1':$('#form_registro_grabado_interior_1').val(),
+                        'num_paginas_interior_2':$('#form_registro_num_paginas_interior_2').val(),
+                        'papel_interior_2_1':$('#form_registro_papel_interior_2').val(),
+                        'papel_interior_2_2':$('#form_registro_papel_interior_2_2').val(),
+                        'gramaje_interior_2_1':$('#form_registro_gramaje_interior_2').val(),
+                        'gramaje_interior_2_2':$('#form_registro_gramaje_interior_2_2').val(),
+                        'tinta_interior_2':$('#form_registro_tinta_interior_2').val(),
+                        'acabados_interior_2':$('#form_registro_acabados_interior_2').val(),
+                        'suaje_interior_2':$('#form_registro_suaje_interior_2').val(),
+                        'grabado_interior_2':$('#form_registro_grabado_interior_2').val(),
+                        'paginas_desplegables':$('#form_registro_paginas_desplegables').val(),
+                        'encartes':$('#form_registro_encartes').val(),
+                        'pop_ups':$('#form_registro_pop_ups').val(),
+                        'disco_compacto':$('#form_registro_disco_compacto').val(),
+                        'audiocinta':$('#form_registro_audiocinta').val(),
+                        'videocinta':$('#form_registro_videocinta').val(),
+                        'otras_caracteristicas_especiales':$('#form_registro_otras_caracteristicas_especiales').val(),
+                        'observaciones':$('#form_registro_observaciones').val()
                     };
                     
                     if($('#form_registro_check_antologia').prop('checked')){
@@ -351,60 +391,6 @@ $(document).ready(function(){
         
     }
     //--------------------------------------------------------------------------
-    
-    
-    //
-    //Si la editorial está activa entonces.
-//    if(editorial_estatus==='1'){
-//        
-//        $.ajax({
-//            url:api_leer_datos_registro_titulo,
-//            type:'POST',
-//            dataType:'JSON',
-//            contentType:'application/x-www-form-urlencoded; charset=UTF-8',
-//            data:'folio='+editorial_folio,
-//            success:function(response){
-//                console.log(response);
-//                sessionStorage.setItem('autores',JSON.stringify([]));
-//                $.getScript(base_url+'assets/js/editorial/registro_titulos/form_registro.min.js',function(){
-//                    form_registro.data=response;
-//                    form_registro.render();
-//                });
-//                $.getScript(base_url+'assets/js/editorial/registro_titulos/form_crear_autor.js',function(){
-//                    form_autor.data=response;
-//                    form_autor.render();
-//                });
-//                
-//                $(document).off('submit','#form_autores');
-//                $(document).on('submit','#form_autores',function(event){
-//                    
-//                    event.preventDefault();
-//                    event.stopPropagation();
-//                    
-//                    let tipo_autor=$('#form_autores_tipo_autor').val();
-//                    let nombre=$('#form_autores_nombre').val();
-//                    let pais=$('#form_autores_pais_origen').val();
-//                    let autores=JSON.parse(sessionStorage.getItem('autores'));
-//                    
-//                    let select_option=$('<option>');
-//                    let list_option=$('<li>',{'class':'list-group-item'});
-//                    $(select_option).text('['+tipo_autor+'] '+nombre);
-//                    $(list_option).text('['+tipo_autor+'] '+nombre);
-//                    
-//                    $('#form_registro_autores').append(select_option);
-//                    $('#list_autores_form_registro').append(list_option);
-//                    
-//                    $('#modal_form_autores').modal('hide');
-//                    $(this).trigger('reset');
-//                });
-//                
-//                
-//            },
-//            error:function(error){
-//                console.log(error);
-//            }
-//        });
-//    }
 
     /**
      * Solicitar activación.

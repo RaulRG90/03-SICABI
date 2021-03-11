@@ -8,7 +8,7 @@
     <input id="editorial_folio" type="hidden" value="<?=$editorial_folio?>" />
     <article id="contenedor_registro">
         <header id="cabecera_principal"></header>
-        <section id="btn_registrar_titulo"></section>
+        <section id="section_btn_registrar_titulo"></section>
         <section id="section_titulos_registrados"></section>
         <section id="seccion_frm_registro"></section>
     </article>

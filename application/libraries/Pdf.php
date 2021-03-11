@@ -434,12 +434,11 @@ class Pdf {
         $mpdf->WriteHTML('GENERO: <span style="font-weight:bold">'.$titulo['genero'].'</span><br/>');
         $mpdf->WriteHTML('CATEGORÍA: <span style="font-weight:bold">'.$titulo['categoria'].'</span><br/>');
         $mpdf->WriteHTML('</td>');
-        $mpdf->WriteHTML('<td style="font-weight:bold;text-align:center">FOLIO: '.$folio.'</td>');
+        $mpdf->WriteHTML('<td style="font-weight:bold;text-align:center;color:red">FOLIO: '.$folio.'</td>');
         $mpdf->WriteHTML('</tr>');
         $mpdf->WriteHTML('</table>');
         $mpdf->WriteHTML('<br />');
-        $mpdf->WriteHTML('<br />');
-        $mpdf->WriteHTML('<p style="border:0.5px solid;padding:5px 5px">'.
+        $mpdf->WriteHTML('<p style="border:0.5px solid;padding:5px 5px;font-size:12px">'.
             '<span style="font-weight:bold;">[BIBLIOGRAFICOS]</span> '.
                 '<span style="font-weight:bold;">Autor(es):</span> | '.
                 '<span style="font-weight:bold;">Título en lengua original:</span> '.$titulo['titulo_original'].' | '.
@@ -469,8 +468,64 @@ class Pdf {
                 '<span style="font-weight:bold;">Núm. de páginas preliminares:</span> '.$titulo['paginas_preliminares'].' | '.
                 '<span style="font-weight:bold;">Núm. de páginas blancas finales o con promoción:</span> '.$titulo['paginas_finales'].' | '.
                 '<span style="font-weight:bold;">Lomo:</span> '.$titulo['lomo'].' mm'.
+                '<br/>'.
+                '<br/>'.
+            '<span style="font-weight:bold;">[GUARDAS]</span> '.
+                '<span style="font-weight:bold;">La foliación incluye guardas:</span> '.$titulo['foliacion'].
+                '<span style="font-weight:bold;"> Papel:</span> '.$titulo['papel_guardas_1'].
+                '<span style="font-weight:bold;"> Tipo de papel:</span> '.$titulo['papel_guardas_2'].') | '.
+                '<span style="font-weight:bold;">Guardas(tinta):</span> '.$titulo['tinta_guardas'].' | '.
+                '<br/>'.
+                '<br/>'.
+            '<span style="font-weight:bold;">[ENCUADERNACIÓN Y FORROS]</span> '.
+                '<span style="font-weight:bold;">Forro:</span> '.$titulo['forro'].
+                '<span style="font-weight:bold;"> Solapa:</span> '.$titulo['solapa'].
+                '<span style="font-weight:bold;"> Papel:</span> '.$titulo['papel_forro_1'].') | '.
+                '<span style="font-weight:bold;"> Tipo de papel:</span> '.$titulo['papel_forro_2'].') | '.
+                '<span style="font-weight:bold;">Gramaje:</span> '.$titulo['gramaje_forro_1'].' | '.
+                '<span style="font-weight:bold;">Tipo gramaje:</span> '.$titulo['gramaje_forro_2'].' | '.
+                '<span style="font-weight:bold;">Tinta:</span> '.$titulo['tinta_forro'].' | '.
+                '<span style="font-weight:bold;">Acabados:</span> '.$titulo['acabado_forro'].' | '.
+                '<span style="font-weight:bold;">Con suaje especial:</span> '.$titulo['suaje_forro'].' | '.
+                '<span style="font-weight:bold;">Con grabado:</span> '.$titulo['grabado_forro'].' | '.
+                '<br/>'.
+                '<br/>'.
+            '<span style="font-weight:bold;">[INTERIOR 1]</span> '.
+                '<span style="font-weight:bold;">Total de páginas:</span> '.$titulo['num_paginas_interior_1'].
+                '<span style="font-weight:bold;"> Papel:</span> '.$titulo['papel_interior_1_1'].') | '.
+                '<span style="font-weight:bold;"> Tipo de papel:</span> '.$titulo['papel_interior_1_2'].') | '.
+                '<span style="font-weight:bold;">Gramaje:</span> '.$titulo['gramaje_interior_1_1'].' | '.
+                '<span style="font-weight:bold;">Tipo gramaje:</span> '.$titulo['gramaje_interior_1_2'].' | '.
+                '<span style="font-weight:bold;">Tinta:</span> '.$titulo['tinta_interior_1'].' | '.
+                '<span style="font-weight:bold;">Acabados:</span> '.$titulo['acabados_interior_1'].' | '.
+                '<span style="font-weight:bold;">Con suaje especial:</span> '.$titulo['suaje_interior_1'].' | '.
+                '<span style="font-weight:bold;">Con grabado:</span> '.$titulo['grabado_interior_1'].' | '.
+                '<br/>'.
+                '<br/>'.
+            '<span style="font-weight:bold;">[RESEÑA]</span> '.
+                '<br/>'.
+                '<br/>'.
+            '<span style="font-weight:bold;">[OBSERVACIONES]</span> '.
+                '<br/>'.
+                '<br/>'.
+                '<span style="font-weight:bold;">Razón social:</span> '.$editorial['edi_razonsocial'].
+                '<span style="font-weight:bold;">R.F.C:</span> '.$editorial['edi_rfc'].
+                '<span style="font-weight:bold;">Sellos editoriales:</span> '.$titulo['sello'].
+                '<span style="font-weight:bold;">Edición de autor:</span> No'.
+                '<span style="font-weight:bold;">Calle:</span> '.$editorial['edi_calle'].
+                '<span style="font-weight:bold;">Núm:</span> '.$editorial['edi_numero'].
+                '<span style="font-weight:bold;">Núm:</span> '.$editorial['edi_numero'].
+                '<span style="font-weight:bold;">Colonia:</span> '.$editorial['edi_colonia'].
+                '<span style="font-weight:bold;">Deleg./Munic.:</span> '.$editorial['edi_delegacion'].
+                '<span style="font-weight:bold;">Entidad federativa:</span> '.$editorial['edi_entidad_federativa'].
+                '<span style="font-weight:bold;">C.P.:</span> '.$editorial['edi_cp'].
+                '<span style="font-weight:bold;">Ciudad:</span> '.$editorial['edi_ciudad'].
+                '<span style="font-weight:bold;">País:</span> '.$editorial['edi_pais'].
+                '<span style="font-weight:bold;">Teléfono(s):</span> '.$editorial['edi_telefonos'].
+                '<span style="font-weight:bold;">Teléfono(s):</span> '.$editorial['edi_telefonos'].
+                '<span style="font-weight:bold;">Correo electrónico:</span> '.$editorial['edi_repmail'].
+                '<span style="font-weight:bold;">Obsrvaciones:</span> '.$editorial['edi_obaservaciones'].
         '</p>');
-        $mpdf->WriteHTML('<br />');
         $mpdf->WriteHTML('<br />');
         $mpdf->WriteHTML('<br />');
         $mpdf->WriteHTML(

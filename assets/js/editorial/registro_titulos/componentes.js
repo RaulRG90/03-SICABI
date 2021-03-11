@@ -36,7 +36,9 @@ let cabecera={
             {
                 'id':'btn_ejemplo_etiquetas',
                 'valor':'Ejemplo para etiquetas',
-                'tipo':'a'
+                'tipo':'a',
+                'href':`${base_url}assets/formatos/ejemplo_etiqueta.pdf`,
+                'target':'_blank'
             },
             {
                 'id':'btn_titulos_registrados',
@@ -471,6 +473,335 @@ let form_registro_titulos={
             'etiqueta':'Lomo:'
         }
     },
+    'datos_encuadernacion_forros':{
+        'forro':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Forro:',
+            'id':'forro',
+            'textos':['','forro'],
+            'tabla':'forros'
+        },
+        'forro_solapa':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El forro tiene solapa:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        },
+        'papel_forro':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Papel del forro:',
+            'id':'papel',
+            'textos':['','papel'],
+            'tabla':'papel_forro'
+        },
+        'gramaje_forro':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required',
+                'min':'1'
+            },
+            'val':'',
+            'etiqueta':'Gramaje del forro:',
+            'id':'gramaje',
+            'textos':['','gramaje'],
+            'tabla':'gramajes'
+        },
+        'tintas_forro':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Tintas del forro:',
+            'id':'tinta',
+            'textos':['','tinta'],
+            'tabla':'tintas'
+        },
+        'acabados_forro':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Acabados del forro:',
+            'id':'acabado',
+            'textos':['','acabado'],
+            'tabla':'acabados'
+        },
+        'suaje':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El forro tiene suaje especial:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        },
+        'grabado':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El forro tiene grabado:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        }
+    },
+    'datos_guardas':{
+        'foliacion':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'La foliación incluye guardas:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        },
+        'papel_guarda':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Papel de las guardas:',
+            'id':'papel',
+            'textos':['','papel'],
+            'tabla':'papel_forro1'
+        },
+        'tinta_guarda':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Tintas de las guardas:',
+            'id':'tinta',
+            'textos':['','tinta'],
+            'tabla':'tintas'
+        }
+    },
+    'datos_interior_1':{
+        'num_paginas':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Número de páginas:'
+        },
+        'papel_interior_1':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Papel del interior:',
+            'id':'papel',
+            'textos':['','papel'],
+            'tabla':'papel_forro1'
+        },
+        'gramaje_interior_1':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required',
+                'min':'1'
+            },
+            'val':'',
+            'etiqueta':'Gramaje del interior:',
+            'id':'gramaje',
+            'textos':['','gramaje'],
+            'tabla':'gramajes'
+        },
+        'tinta_interior_1':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Tintas del interior:',
+            'id':'tinta',
+            'textos':['','tinta'],
+            'tabla':'tintas'
+        },
+        'acabados_interior_1':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Acabados del interior:',
+            'id':'acabado',
+            'textos':['','acabado'],
+            'tabla':'acabados'
+        },
+        'suaje':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El interior tiene suaje especial:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        },
+        'grabado':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El interior tiene grabado:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        }
+    },
+    'datos_interior_2':{
+        'num_paginas':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Número de páginas:'
+        },
+        'papel_interior_2':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Papel del interior:',
+            'id':'papel',
+            'textos':['','papel'],
+            'tabla':'papel_forro1'
+        },
+        'gramaje_interior_2':{
+            'tipo':'number',
+            'atributos':{
+                'required':'required',
+                'min':'1'
+            },
+            'val':'',
+            'etiqueta':'Gramaje del interior:',
+            'id':'gramaje',
+            'textos':['','gramaje'],
+            'tabla':'gramajes'
+        },
+        'tinta_interior_2':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Tintas del interior:',
+            'id':'tinta',
+            'textos':['','tinta'],
+            'tabla':'tintas'
+        },
+        'acabados_interior_2':{
+            'tipo':'seleccion',
+            'atributos':{
+                'required':'required'
+            },
+            'val':'',
+            'etiqueta':'Acabados del interior:',
+            'id':'acabado',
+            'textos':['','acabado'],
+            'tabla':'acabados'
+        },
+        'suaje':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El interior tiene suaje especial:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        },
+        'grabado':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'El interior tiene grabado:',
+            'id':'opt',
+            'textos':['','opt'],
+            'tabla':'opts'
+        }
+    },
+    'datos_caracteristicas_especiales':{
+        'paginas_desplegables':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Páginas desplegables:',
+            'id':'num',
+            'textos':['','num'],
+            'tabla':'numeros'
+        },
+        'encartes':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Encartes:',
+            'id':'num',
+            'textos':['','num'],
+            'tabla':'numeros'
+        },
+        'pop_ups':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Pop – ups:',
+            'id':'num',
+            'textos':['','num'],
+            'tabla':'numeros'
+        },
+        'disco_compacto':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Disco compacto:',
+            'id':'num',
+            'textos':['','num'],
+            'tabla':'numeros'
+        },
+        'audiocinta':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Audiocinta:',
+            'id':'num',
+            'textos':['','num'],
+            'tabla':'numeros'
+        },
+        'videocinta':{
+            'tipo':'seleccion',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Videocinta:',
+            'id':'num',
+            'textos':['','num'],
+            'tabla':'numeros'
+        },
+        'otras_caracteristicas_especiales':{
+            'tipo':'textarea',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Otras características especiales:'
+        },
+        'observaciones':{
+            'tipo':'textarea',
+            'atributos':null,
+            'val':'',
+            'etiqueta':'Observaciones:'
+        }
+        
+    },
     'id_form':'form_registro',
     'crear_cabecera':function(seccion){
         
@@ -537,6 +868,210 @@ let form_registro_titulos={
         
         return componente;
     },
+    'crear_datos_encuadernacion_forros':function(){
+        
+        this.data['forros']={'data':[
+            
+            {'forro':'A caballo con 1 grapa'},
+            {'forro':'A caballo con 2 grapas'},
+            {'forro':'A caballo con 3 grapas'},
+            {'forro':'A caballo con 4 grapas'},
+            {'forro':'Acordeón'},
+            {'forro':'Empalmado'},
+            {'forro':'Rústica'},
+            {'forro':'Rústica (espirar – wire)'},
+            {'forro':'Rústica (pegada y cosida'},
+            {'forro':'Rústica (pegada)'},
+            {'forro':'Tapa dura - cartoné (lomo de bóveda)'},
+            {'forro':'Tapa dura - cartoné (pegada y cosida)'},
+            {'forro':'Tapa dura - cartoné(pegada)'}
+        ]};
+        
+        this.data['gramajes']={'data':[
+
+            {'gramaje':'Gramos'},
+            {'gramaje':'Puntos'}
+        ]};
+        
+        this.data['acabados']={'data':[
+            
+            {'acabado':'Barniz / Máquina / Mate'},
+            {'acabado':'Barniz / Máquina / Brillante'},
+            {'acabado':'Barniz / Barniz UV / Mate'},
+            {'acabado':'Barniz / Barniz UV / Brillante'},
+            {'acabado':'Plastificado / Mate'},
+            {'acabado':'Plastificado / Brillante'},
+            {'acabado':'Sin acabado especial'},
+            {'acabado':'Otro'}
+        ]};
+
+        const forro=this.crear_group(
+                this.datos_encuadernacion_forros.forro,
+                this.crear_input_seleccion('forro','forros','forro',this.datos_encuadernacion_forros.forro.textos)
+            );
+        const forro_solapa=this.crear_group(
+                this.datos_encuadernacion_forros.forro_solapa,
+                this.crear_input_seleccion('forro_solapa','opts','opt',this.datos_encuadernacion_forros.forro_solapa.textos)
+            );
+        const papel_forro=this.crear_group(
+                this.datos_encuadernacion_forros.papel_forro,
+                this.crear_input_seleccion('papel_forro1','papel_forro1','papel',this.datos_encuadernacion_forros.papel_forro.textos)
+            );
+        $(papel_forro).append(this.crear_input_seleccion('papel_forro2','papel_forro2','papel',this.datos_encuadernacion_forros.papel_forro.textos));
+        const gramaje_forro=this.crear_input_group('gramaje_forro1',this.datos_encuadernacion_forros.gramaje_forro);
+        $(gramaje_forro).append(this.crear_input_seleccion('gramaje_forro2','gramajes','gramaje',this.datos_encuadernacion_forros.gramaje_forro.textos));
+        const tintas_forro=this.crear_input_group('tintas_forro',this.datos_encuadernacion_forros.tintas_forro);
+        const acabados_forro=this.crear_input_group('acabado_forro',this.datos_encuadernacion_forros.acabados_forro);
+        const suaje=this.crear_input_group('suaje',this.datos_encuadernacion_forros.suaje);
+        const grabado=this.crear_input_group('grabado',this.datos_encuadernacion_forros.grabado);
+        
+        const componente=$('<section>',{'id':this.id_form+'_datos_encuadernacion_forros','class':'mx-10','titulo':'datos_encuadernacion_forros'});
+        
+        
+        $(componente).
+                append(forro).
+                append(forro_solapa).
+                append(papel_forro).
+                append(gramaje_forro).
+                append(tintas_forro).
+                append(acabados_forro).
+                append(suaje).
+                append(grabado);
+        
+        return componente;
+    },
+    'crear_datos_guardas':function(){
+
+        const foliacion=this.crear_input_group('foliacion',this.datos_guardas.foliacion);
+        const papel_guardas=this.crear_group(
+                this.datos_guardas.papel_guarda,
+                this.crear_input_seleccion('papel_guardas','papel_forro1','papel',this.datos_guardas.papel_guarda.textos)
+            );
+        $(papel_guardas).append(this.crear_input_seleccion('papel_guardas2','papel_forro2','papel',this.datos_guardas.papel_guarda.textos));
+        const tintas_guarda=this.crear_input_group('tintas_guarda',this.datos_guardas.tinta_guarda);
+        
+        const componente=$('<section>',{'id':this.id_form+'_datos_guardas','class':'mx-10','titulo':'datos_guardas'});
+        
+        
+        $(componente).
+                append(foliacion).
+                append(papel_guardas).
+                append(tintas_guarda);
+        
+        return componente;
+    },
+    'crear_datos_interior_1':function(){
+
+        const num_paginas=this.crear_input_group('num_paginas',this.datos_interior_1.num_paginas);
+        const papel_interior_1=this.crear_group(
+                this.datos_interior_1.papel_interior_1,
+                this.crear_input_seleccion('papel_interior_1','papel_forro1','papel',this.datos_interior_1.papel_interior_1.textos)
+            );
+        $(papel_interior_1).append(this.crear_input_seleccion('papel_interior_1_2','papel_forro2','papel',this.datos_interior_1.papel_interior_1.textos));
+        const gramaje_interior_1=this.crear_input_group('gramaje_interior_1',this.datos_interior_1.gramaje_interior_1);
+        $(gramaje_interior_1).append(this.crear_input_seleccion('gramaje_interior_1_2','gramajes','gramaje',this.datos_interior_1.gramaje_interior_1.textos));
+        const tinta_interior_1=this.crear_input_group('tinta_interior_1',this.datos_interior_1.tinta_interior_1);
+        const acabados_interior_1=this.crear_input_group('acabados_interior_1',this.datos_interior_1.acabados_interior_1);
+        const suaje=this.crear_input_group('suaje_interior_1',this.datos_interior_1.suaje);
+        const grabado=this.crear_input_group('grabado_interior_1',this.datos_interior_1.grabado);
+        
+        const componente=$('<section>',{'id':this.id_form+'_datos_interior_1','class':'mx-10','titulo':'datos_interior_1'});
+        
+        
+        $(componente).
+                append(num_paginas).
+                append(papel_interior_1).
+                append(gramaje_interior_1).
+                append(tinta_interior_1).
+                append(acabados_interior_1).
+                append(suaje).
+                append(grabado);
+        
+        return componente;
+    },
+    'crear_datos_interior_2':function(){
+
+        const num_paginas=this.crear_input_group('num_paginas_interior_2',this.datos_interior_2.num_paginas);
+        const papel_interior_2=this.crear_group(
+                this.datos_interior_2.papel_interior_2,
+                this.crear_input_seleccion('papel_interior_2','papel_forro1','papel',this.datos_interior_2.papel_interior_2.textos)
+            );
+        $(papel_interior_2).append(this.crear_input_seleccion('papel_interior_2_2','papel_forro2','papel',this.datos_interior_2.papel_interior_2.textos));
+        const gramaje_interior_2=this.crear_input_group('gramaje_interior_2',this.datos_interior_2.gramaje_interior_2);
+        $(gramaje_interior_2).append(this.crear_input_seleccion('gramaje_interior_2_2','gramajes','gramaje',this.datos_interior_2.gramaje_interior_2.textos));
+        const tinta_interior_2=this.crear_input_group('tinta_interior_2',this.datos_interior_2.tinta_interior_2);
+        const acabados_interior_2=this.crear_input_group('acabados_interior_2',this.datos_interior_2.acabados_interior_2);
+        const suaje=this.crear_input_group('suaje_interior_2',this.datos_interior_2.suaje);
+        const grabado=this.crear_input_group('grabado_interior_2',this.datos_interior_2.grabado);
+        
+        const componente=$('<section>',{'id':this.id_form+'_datos_interior_2','class':'mx-10','titulo':'datos_interior_2'});
+        
+        
+        $(componente).
+                append(num_paginas).
+                append(papel_interior_2).
+                append(gramaje_interior_2).
+                append(tinta_interior_2).
+                append(acabados_interior_2).
+                append(suaje).
+                append(grabado);
+        
+        return componente;
+    },
+    'crear_caracteristicas_especiales':function(){
+
+        const paginas_desplegables=this.crear_input_group('paginas_desplegables',this.datos_caracteristicas_especiales.paginas_desplegables);
+        const encartes=this.crear_input_group('encartes',this.datos_caracteristicas_especiales.encartes);
+        const pop_ups=this.crear_input_group('pop_ups',this.datos_caracteristicas_especiales.pop_ups);
+        $(pop_ups).children('.custom-select').append($('<option>',{'value':'Más de 9'}).text('Más de 9'));
+        const disco_compacto=this.crear_input_group('disco_compacto',this.datos_caracteristicas_especiales.disco_compacto);
+        const audiocinta=this.crear_input_group('audiocinta',this.datos_caracteristicas_especiales.audiocinta);
+        const videocinta=this.crear_input_group('videocinta',this.datos_caracteristicas_especiales.videocinta);
+        const otras_caracteristicas_especiales=this.crear_input_group('otras_caracteristicas_especiales',this.datos_caracteristicas_especiales.otras_caracteristicas_especiales);
+        const observaciones=this.crear_input_group('observaciones',this.datos_caracteristicas_especiales.observaciones);
+        
+        const componente=$('<section>',{'id':this.id_form+'_datos_caracteristicas_especiales','class':'mx-10','titulo':'datos_caracteristicas_especiales'});
+        
+        
+        $(componente).
+                append(paginas_desplegables).
+                append(encartes).
+                append(pop_ups).
+                append(disco_compacto).
+                append(audiocinta).
+                append(videocinta).
+                append(otras_caracteristicas_especiales).
+                append(observaciones);
+        
+        return componente;
+    },
+    'crear_group':function(dato,control){
+        
+        const group=$('<div>',{'class':'input-group mb-3'});
+        const group_prepend=$('<div>',{'class':'input-group-prepend'});
+        const label_prepend=$('<span>',{'class':'input-group-text'});
+        let hay_atributos=dato.atributos!==null?true:false;
+        
+        if(hay_atributos){
+            
+            $.each(dato.atributos,(atributo)=>{
+                
+                $(control).attr(atributo,atributo);
+            });
+
+            if(dato.atributos.required!==null){
+
+                $(label_prepend).addClass('font-weight-bold');
+            }
+        }
+        
+        $(label_prepend).text(dato.etiqueta);
+        $(group_prepend).append(label_prepend);
+        
+        $(group).append(group_prepend).append(control);
+        
+        return group;
+    },
     'crear_input_group':function(nombre_control,dato){
         
         let id_frm=this.id_form;
@@ -584,9 +1119,8 @@ let form_registro_titulos={
         
         if(hay_atributos){
             
-            $.each(dato.atributos,(atributo)=>{
-                
-                $(control_input).attr(atributo,atributo);
+            $.each(dato.atributos,(atributo,val)=>{
+                $(control_input).attr(atributo,val);
             });
 
             if(dato.atributos.required!==null){
@@ -687,6 +1221,21 @@ let form_registro_titulos={
             case 'datos_tecnicos':
                 titulo='Datos Técnicos';
                 break;
+            case 'datos_encuadernacion_forros':
+                titulo='Datos Encuadernación y forros';
+                break;
+            case 'datos_guardas':
+                titulo='Guardas';
+                break;
+            case 'datos_interior_1':
+                titulo='Interior 1';
+                break;
+            case 'datos_interior_2':
+                titulo='Interior 2';
+                break;
+            case 'datos_caracteristicas_especiales':
+                titulo='Características especiales';
+                break;
         }
         
         const card_header=$('<div>',{'id':seccion_titulo,'class':'card-header'});
@@ -733,11 +1282,92 @@ let form_registro_titulos={
     },
     'render':function(){
         
+        this.data['opts']={'data':[
+            
+            {'opt':'Si'},
+            {'opt':'No'}
+        ]};
+        this.data['papel_forro1']={'data':[
+
+            {'papel':'Couché o similares'},
+            {'papel':'Bond o similares'},
+            {'papel':'Otro'}
+        ]};
+        this.data['papel_forro2']={'data':[
+
+            {'papel':'Mate'},
+            {'papel':'Brillante'}
+        ]};
+        this.data['tintas']={'data':[
+            
+            {'tinta':'1x0'},
+            {'tinta':'1x1'},
+            {'tinta':'2x0'},
+            {'tinta':'2x1'},
+            {'tinta':'2x2'},
+            {'tinta':'3x0'},
+            {'tinta':'3x1'},
+            {'tinta':'3x2'},
+            {'tinta':'3x3'},
+            {'tinta':'4x0'},
+            {'tinta':'4x1'},
+            {'tinta':'4x2'},
+            {'tinta':'4x3'},
+            {'tinta':'4x4'},
+            {'tinta':'5x0'},
+            {'tinta':'5x1'},
+            {'tinta':'5x2'},
+            {'tinta':'5x3'},
+            {'tinta':'5x4'},
+            {'tinta':'5x5'},
+            {'tinta':'Sin tinta'}
+        ]};
+        this.data['gramajes']={'data':[
+
+            {'gramaje':'Gramos'},
+            {'gramaje':'Puntos'}
+        ]};
+        this.data['acabados']={'data':[
+            
+            {'acabado':'Barniz / Máquina / Mate'},
+            {'acabado':'Barniz / Máquina / Brillante'},
+            {'acabado':'Barniz / Barniz UV / Mate'},
+            {'acabado':'Barniz / Barniz UV / Brillante'},
+            {'acabado':'Plastificado / Mate'},
+            {'acabado':'Plastificado / Brillante'},
+            {'acabado':'Sin acabado especial'},
+            {'acabado':'Otro'}
+        ]};
+        this.data['numeros']={'data':[
+            
+            {'num':1},
+            {'num':2},
+            {'num':3},
+            {'num':4},
+            {'num':5},
+            {'num':6},
+            {'num':7},
+            {'num':8}
+        ]};
+        
         const contenedor=$('<article>',{'id':this.id_form,'class':'container-fluid border'});
         const formulario=$('<form>',{'id':'form_registro','class':"needs-validation",'novalidate':'novalidate'});
         const datos_bibliograficos=this.crear_card(this.crear_datos_bibliograficos());
         const datos_tecnicos=this.crear_card(this.crear_datos_tecnicos());
-        const acordion=this.crear_acordion([datos_bibliograficos,datos_tecnicos]);
+        const datos_encuadernacion_forros=this.crear_card(this.crear_datos_encuadernacion_forros());
+        const datos_guarda=this.crear_card(this.crear_datos_guardas());
+        const datos_interior_1=this.crear_card(this.crear_datos_interior_1());
+        const datos_interior_2=this.crear_card(this.crear_datos_interior_2());
+        const datos_caracteristicas_especiales=this.crear_card(this.crear_caracteristicas_especiales());
+        const acordion=this.crear_acordion([
+            datos_bibliograficos,
+            datos_tecnicos,
+            datos_encuadernacion_forros,
+            datos_guarda,
+            datos_interior_1,
+            datos_interior_2,
+            datos_caracteristicas_especiales
+        ]);
         const btn_enviar=$('<button>',{
             'type':'submit',
             'id':'btn_enviar_registro',
@@ -760,6 +1390,9 @@ let form_registro_titulos={
 };
 //--------------------------------------------------------------------------
 
+/* ****************************** *
+* ***** Formulario de Autor ***** *
+* ******************************* */
 let form_autor={
     'data':'',
     'id_form':'form_autores',
@@ -905,7 +1538,11 @@ let form_autor={
         return this.modal_form_create();
     }
 };
+//--------------------------------------------------------------------------
 
+/* ************************************************ *
+* ***** Formulario de activación de editorial ***** *
+* ************************************************* */
 let form_activacion_editorial={
     'data':'',
     'id_form':'form_activacion_editorial',
@@ -1161,4 +1798,4 @@ let form_activacion_editorial={
         $(contenedor).append(this.header_create()).append(this.modal_form_create());
     }
 };
-
+//--------------------------------------------------------------------------
